@@ -11,22 +11,21 @@ class CustomAuthController extends Controller
     {
         return view('auth.login');
     }  
-      
-    public function customLogin(Request $request)
-    {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
+    public function loginWithFronend(Request $request){
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
-   
-        $credentials = $request->only('email', 'password');
+ 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard')
-                        ->withSuccess('Signed in');
+            $request->session()->regenerate();
+ 
+            return json_encode("success");
         }
-  
-        return redirect("login")->withSuccess('Login details are not valid');
+ 
+        return json_encode("error");
     }
+      
 
     public function registration()
     {
@@ -47,15 +46,6 @@ class CustomAuthController extends Controller
         return redirect("dashboard")->withSuccess('You have signed-in');
     }
 
-    public function create(array $data)
-    {
-      return User::create([
-        'name' => $data['name'],
-        'email' => $data['email'],
-        'password' => Hash::make($data['password'])
-      ]);
-    }    
-    
     public function dashboard()
     {
         if(Auth::check()){
