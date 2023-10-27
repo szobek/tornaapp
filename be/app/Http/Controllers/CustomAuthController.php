@@ -5,6 +5,8 @@ use Hash;
 use Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 class CustomAuthController extends Controller
 {
     public function index()
@@ -19,8 +21,15 @@ class CustomAuthController extends Controller
  
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
- 
-            return json_encode($credentials);
+
+            $name = DB::table('user_data')
+            ->join('users', 'users.id', '=', 'user_data.user_id')
+            ->select('first_name', 'phone', 'last_name')
+            ->get();
+
+ //$name = DB::table("user_data")->where('user_id','SELECT id FROM users WHERE email="kunszt.norbert@gmail.com"')->select(['first_name','last_name'])->get();
+ //print_r($name);
+            return json_encode($name);
         }
  
         return json_encode("error");
