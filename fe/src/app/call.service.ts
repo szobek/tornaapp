@@ -9,39 +9,22 @@ export class CallService {
   
   constructor(private http: HttpClient) { }
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-  next(data:any) {
-    console.log(data)
-  }
-end(){}
 
-t2(){
+
+loginFromFrontend(){
   const httpBody = new HttpParams()
       .set('email', 'kunszt.norbert@gmail.com')
-      .set('password', 'rrrrrrt');
+      .set('password', 'rrrrrr');
   const url = "http://127.0.0.1:8000/tornaapp/login";
-  return this.http.post(url,httpBody)
+  return this.http.post(url,httpBody).subscribe({
+    next: (response) => {
+      console.log(response)
+    },
+    error: (error) => {
+        alert('There was an error in retrieving data from the server');
+    }
+});
 }
-
-  test() {
-
-    
-    this.t2().subscribe({
-      next: (response) => {
-        console.log(response)
-      },
-      error: (error) => {
-          alert('There was an error in retrieving data from the server');
-      }
-  });
-
-
-  }
-
   
   
 }

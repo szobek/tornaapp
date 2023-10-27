@@ -8,6 +8,6 @@ import { CallService } from '../call.service';
 })
 export class LoginComponent {
 constructor(call: CallService){
-  call.test();
+  call.loginFromFrontend();
 }
 }

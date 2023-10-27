@@ -9,6 +9,6 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class AppComponent {
   constructor(call: CallService){
-    call.test();
+    call.loginFromFrontend();
   }
 }

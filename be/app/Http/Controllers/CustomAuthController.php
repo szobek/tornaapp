@@ -20,7 +20,7 @@ class CustomAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
  
-            return json_encode("success");
+            return json_encode($credentials);
         }
  
         return json_encode("error");
