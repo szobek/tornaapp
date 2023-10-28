@@ -1,3 +1,5 @@
+import { UserData } from "./user-data";
+
 export class User {
     id?: string;
     password?: string;
@@ -8,9 +10,9 @@ export class User {
     phone?:string;
 
     
-    constructor(all:any){
-        this.firstName=all.first_name
-        this.lastName=all.last_name
+    constructor(all:UserData){
+        this.firstName=all.firstName
+        this.lastName=all.lastName
         this.phone=all.phone
     }
 }
