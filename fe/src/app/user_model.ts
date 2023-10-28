@@ -7,8 +7,10 @@ export class User {
     email?:string;
     phone?:string;
 
-    constructor(forst_name:string,last_name:string){
-        this.firstName=forst_name
-        this.lastName=last_name
+    
+    constructor(all:any){
+        this.firstName=all.first_name
+        this.lastName=all.last_name
+        this.phone=all.phone
     }
 }

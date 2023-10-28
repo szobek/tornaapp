@@ -1,7 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CallService } from './call.service';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { first } from 'rxjs';
 import { User } from './user_model';
 import { AccountService } from './account.service';
 
@@ -10,18 +8,27 @@ import { AccountService } from './account.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   name:string ="";
   user: User |null;
   
-  constructor(call: CallService, ac:AccountService){
+  
+  constructor(private call: CallService,private ac:AccountService){
     this.user = ac.userSubject.getValue()
-    call.loginFromFrontend().subscribe({
+    
+  }
+  ngOnInit(): void {
+    this.call.loginFromFrontend().subscribe({
       next: (res: any) => {
         this.name = res[0].first_name + res[0].last_name
         console.log(res[0])
-        ac.userSubject.next(new User(res[0].first_name,res[0].last_name))
-        this.user = ac.userSubject.getValue()
+        const user_data = {
+          first_name:res[0].first_name,
+          last_name:res[0].last_name,
+          phone:res[0].phone
+        }
+        this.ac.userSubject.next(new User(user_data))
+        this.user = this.ac.userSubject.getValue()
     console.log(this.user)
         
       },
@@ -33,5 +40,6 @@ export class AppComponent {
       },
     });
   }
+
 }
 

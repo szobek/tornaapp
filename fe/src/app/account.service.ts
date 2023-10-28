@@ -8,6 +8,6 @@ import { User } from './user_model';
 export class AccountService {
   public userSubject: BehaviorSubject<User > ;
   constructor() { 
-    this.userSubject = new BehaviorSubject(new User("",""));
+    this.userSubject = new BehaviorSubject(new User({}));
   }
 }
