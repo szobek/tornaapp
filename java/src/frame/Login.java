@@ -8,10 +8,19 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.awt.Component;
+
+import javax.imageio.ImageIO;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
+
 import java.awt.Canvas;
 import java.awt.Panel;
+import javax.swing.JSeparator;
+import javax.swing.JPanel;
 
 public class Login {
 
@@ -55,26 +64,40 @@ public class Login {
 		frmLogin.setBounds(100, 100, 405, 244);
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogin.getContentPane().setLayout(null);
-		
+
 		JLabel lblEmail = new JLabel("E-mail");
 		lblEmail.setBounds(94, 138, 46, 14);
 		frmLogin.getContentPane().add(lblEmail);
-		
+
 		JLabel lblPassword = new JLabel("Jelszó");
 		lblPassword.setBounds(94, 177, 46, 14);
 		frmLogin.getContentPane().add(lblPassword);
-		
+
 		textField = new JTextField();
 		textField.setBounds(150, 135, 107, 20);
 		frmLogin.getContentPane().add(textField);
 		textField.setColumns(10);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(150, 174, 107, 20);
 		frmLogin.getContentPane().add(passwordField);
-		
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		horizontalStrut.setBounds(94, 113, 175, 14);
-		frmLogin.getContentPane().add(horizontalStrut);
+
+		JSeparator separator = new JSeparator();
+		separator.setBounds(44, 113, 295, 14);
+		frmLogin.getContentPane().add(separator);
+
+		 
+		try {
+			
+			BufferedImage img = ImageIO.read(new File("src/images/l.png"));
+			JLabel pic = new JLabel(new ImageIcon("D:\\projects\\all\\tornaapp\\java\\src\\images\\l.png"));
+			pic.setSize(263, 91);
+			pic.setLocation(59, 11);
+			frmLogin.getContentPane().add(pic);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
