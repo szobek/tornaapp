@@ -15,8 +15,9 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 Route::get('/',[MainController::class,'main'])->name('main');
 
 Route::group([
-    'middleware' => ['cors'],
+    'middleware' => ['cors','api'],
     
 ], function ($router) {
      Route::post('tornaapp/login',[CustomAuthController::class, 'loginWithFronend']);
+    
 });
