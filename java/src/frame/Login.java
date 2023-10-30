@@ -8,9 +8,15 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.Component;
 
 import javax.imageio.ImageIO;
@@ -21,12 +27,18 @@ import java.awt.Canvas;
 import java.awt.Panel;
 import javax.swing.JSeparator;
 import javax.swing.JPanel;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Login {
 
 	private JFrame frmLogin;
-	private JTextField textField;
-	private JPasswordField passwordField;
+	private JFrame frmWelcome;
+	private JTextField textFieldEmail;
+	private JPasswordField passwordFieldPassword;
+	
 
 	/**
 	 * Launch the application.
@@ -73,14 +85,14 @@ public class Login {
 		lblPassword.setBounds(94, 177, 46, 14);
 		frmLogin.getContentPane().add(lblPassword);
 
-		textField = new JTextField();
-		textField.setBounds(150, 135, 107, 20);
-		frmLogin.getContentPane().add(textField);
-		textField.setColumns(10);
+		textFieldEmail = new JTextField();
+		textFieldEmail.setBounds(150, 135, 107, 20);
+		frmLogin.getContentPane().add(textFieldEmail);
+		textFieldEmail.setColumns(10);
 
-		passwordField = new JPasswordField();
-		passwordField.setBounds(150, 174, 107, 20);
-		frmLogin.getContentPane().add(passwordField);
+		passwordFieldPassword = new JPasswordField();
+		passwordFieldPassword.setBounds(150, 174, 107, 20);
+		frmLogin.getContentPane().add(passwordFieldPassword);
 
 		JSeparator separator = new JSeparator();
 		separator.setBounds(44, 113, 295, 14);
@@ -91,13 +103,39 @@ public class Login {
 			
 			BufferedImage img = ImageIO.read(new File("src/images/l.png"));
 			JLabel pic = new JLabel(new ImageIcon("D:\\projects\\all\\tornaapp\\java\\src\\images\\l.png"));
+			pic.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
+			pic.setForeground(new Color(153, 255, 102));
 			pic.setSize(263, 91);
 			pic.setLocation(59, 11);
 			frmLogin.getContentPane().add(pic);
-
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+
+		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String email = textFieldEmail.getText() ;
+				String password = String.valueOf( passwordFieldPassword.getPassword());
+				System.out.println(email);
+				System.out.println(password);
+				
+				Welcome welcomeWindow = new Welcome();
+				frmLogin.setVisible(false);
+				welcomeWindow.setVisible(true);
+				welcomeWindow.setBounds(0, 0, 500, 400);
+				 JLabel wel_label = new JLabel("Welcome: "+email);  
+		            welcomeWindow.getContentPane().add(wel_label);  
+				
+			}
+		});
+		btnLogin.setBackground(new Color(0, 204, 102));
+		btnLogin.setBounds(292, 173, 73, 23);
+		frmLogin.getContentPane().add(btnLogin);
+
+
 	}
 }
