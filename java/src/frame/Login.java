@@ -74,7 +74,8 @@ public class Login {
 		frmLogin.getContentPane().add(textFieldEmail);
 		textFieldEmail.setColumns(10);
 
-		passwordFieldPassword = new JPasswordField("rrrrrr");
+		passwordFieldPassword = new JPasswordField("rrrrrr"
+				+ "");
 		passwordFieldPassword.setBounds(150, 174, 107, 20);
 		frmLogin.getContentPane().add(passwordFieldPassword);
 

@@ -9,6 +9,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.ListSelectionModel;
+import javax.swing.JTable;
+import java.awt.Toolkit;
+import javax.swing.table.DefaultTableModel;
 
 public class Welcome extends JFrame {
 	/**
@@ -17,10 +23,16 @@ public class Welcome extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 private ArrayList<ExerciseUser> users;
+private JTable table;
+private Object[][] tableData;
 	public Welcome() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
+		
+		setTitle("Villámtánc");
 		getContentPane().setLayout(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+				setDefaultCloseOperation(EXIT_ON_CLOSE);
 		createMenu();
+		
 		
 	}
 
@@ -57,18 +69,51 @@ private ArrayList<ExerciseUser> users;
 		mnNewMenu_1.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Új felhasználó");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createNewUser();
+				
+			}
+		});
 		mnNewMenu_1.add(mntmNewMenuItem_2);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Jogok állítása");
 		mnNewMenu_1.add(mntmNewMenuItem_3);
 	}
 	private void getUsersAndShow() {
-		this.users = DBHAndler2.getAllFromDB();
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(21, 11, 354, 208);
-		getContentPane().add(scrollPane);
-		JList<ExerciseUser> list;
-		list=new JList(users.toArray());
-		scrollPane.setViewportView(list);
+this.users = DBHAndler2.getAllFromDB();
+		JScrollPane scrollPane2 = new JScrollPane();
+		scrollPane2.setBounds(10, 20, 400, 150);
+		getContentPane().add(scrollPane2);
+		
+		String[] columnNames = {"Név", "Telefon", "E-mail"};
+		tableData = new Object[users.size()][3];
+		createRows();
+		DefaultTableModel tableModel = new DefaultTableModel(tableData, columnNames);
+		table = new JTable(tableModel);
+		
+		
+		
+		table.setBackground(new Color(153, 204, 255));
+		table.setForeground(new Color(0, 102, 153));
+		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		
+		scrollPane2.setViewportView(table);
+	}
+	
+	private void createRows() {
+		for (int i = 0; i < users.size(); i++) {
+			tableData[i][0] = users.get(i).getUserName();
+
+			tableData[i][1] = users.get(i).getUserPhone();
+			tableData[i][2] = users.get(i).getUserEmail();
+			
+		}
+
+	}
+	
+	private void createNewUser() {
+		
 	}
 }

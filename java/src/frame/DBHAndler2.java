@@ -28,11 +28,11 @@ public class DBHAndler2 {
 		ArrayList<ExerciseUser> users = new ArrayList<ExerciseUser>();
 	 if(con!=null) {
 		 try  {
-			 String query = "select phone,first_name,last_name from user_data inner join users on users.id=user_data.user_id";
+			 String query = "select users.email,phone,first_name,last_name from user_data inner join users on users.id=user_data.user_id";
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
 				while (rs.next())
-					users.add(new ExerciseUser(rs.getString("phone"), rs.getString("first_name"), rs.getString("last_name")));
+					users.add(new ExerciseUser(rs.getString("phone"), rs.getString("first_name"), rs.getString("last_name"),rs.getString("email")));
 			
 			} catch (SQLException e) {
 				System.err.println(e.getMessage());
