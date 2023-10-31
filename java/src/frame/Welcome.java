@@ -1,8 +1,6 @@
 package frame;
 
 import java.util.ArrayList;
-
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
@@ -13,6 +11,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class Welcome extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	public Welcome() {
 		getContentPane().setLayout(null);
 		
@@ -23,14 +27,21 @@ public class Welcome extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		
-		JList list = new JList(users.toArray());
-		JList<Reserve> reserveList ;
+	JList<ExerciseUser> list;
+		list=new JList(users.toArray());
 		
 		
 		scrollPane.setViewportView(list);
+		createMenu();
 		
+		
+		
+	}
+
+	
+	private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
-		scrollPane.setColumnHeaderView(menuBar);
+		setJMenuBar(menuBar);
 		
 		JMenu mnNewMenu = new JMenu("Foglalás");
 		menuBar.add(mnNewMenu);
@@ -58,9 +69,4 @@ public class Welcome extends JFrame {
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Jogok állítása");
 		mnNewMenu_1.add(mntmNewMenuItem_3);
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 }
