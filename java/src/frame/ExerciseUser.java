@@ -16,7 +16,7 @@ public class ExerciseUser {
 
 	@Override
 	public String toString() {
-		return "ExerciseUser [phone=" + phone + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "Név: "+ firstName + " " + lastName + ", telefon: " + phone;
 	}
 
 }

@@ -16,25 +16,11 @@ public class Welcome extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-
+private ArrayList<ExerciseUser> users;
 	public Welcome() {
 		getContentPane().setLayout(null);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(21, 11, 354, 208);
-		getContentPane().add(scrollPane);
-		ArrayList<ExerciseUser> users = DBHAndler2.getAllFromDB();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		
-	JList<ExerciseUser> list;
-		list=new JList(users.toArray());
-		
-		
-		scrollPane.setViewportView(list);
 		createMenu();
-		
-		
 		
 	}
 
@@ -61,6 +47,13 @@ public class Welcome extends JFrame {
 		menuBar.add(mnNewMenu_1);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Felhasználó lista");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			
+
+			public void actionPerformed(ActionEvent e) {
+				getUsersAndShow();
+			}
+		});
 		mnNewMenu_1.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Új felhasználó");
@@ -68,5 +61,14 @@ public class Welcome extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Jogok állítása");
 		mnNewMenu_1.add(mntmNewMenuItem_3);
+	}
+	private void getUsersAndShow() {
+		this.users = DBHAndler2.getAllFromDB();
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(21, 11, 354, 208);
+		getContentPane().add(scrollPane);
+		JList<ExerciseUser> list;
+		list=new JList(users.toArray());
+		scrollPane.setViewportView(list);
 	}
 }
