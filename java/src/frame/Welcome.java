@@ -20,7 +20,7 @@ public class Welcome extends JFrame {
 		scrollPane.setBounds(21, 11, 354, 208);
 		getContentPane().add(scrollPane);
 		ArrayList<ExerciseUser> users = DBHAndler2.getAllFromDB();
-		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		
 		JList list = new JList(users.toArray());
@@ -42,6 +42,21 @@ public class Welcome extends JFrame {
 			}
 		});
 		mnNewMenu.add(mntmNewMenuItem);
+		
+		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Új foglalás");
+		mnNewMenu.add(mntmNewMenuItem_4);
+		
+		JMenu mnNewMenu_1 = new JMenu("Felhasználók");
+		menuBar.add(mnNewMenu_1);
+		
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Felhasználó lista");
+		mnNewMenu_1.add(mntmNewMenuItem_1);
+		
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Új felhasználó");
+		mnNewMenu_1.add(mntmNewMenuItem_2);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Jogok állítása");
+		mnNewMenu_1.add(mntmNewMenuItem_3);
 	}
 
 	/**

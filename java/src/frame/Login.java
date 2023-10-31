@@ -144,6 +144,7 @@ public class Login {
 					welcomeWindow.setBounds(0, 0, 500, 400);
 					
 				}else {
+					JOptionPane.showMessageDialog(null, "a jelszó vagy az email hibás", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
 					return;
 				}
 				
