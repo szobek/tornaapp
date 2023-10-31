@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.Color;
@@ -117,18 +118,35 @@ public class Login {
 
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
-				String email = textFieldEmail.getText() ;
-				String password = String.valueOf( passwordFieldPassword.getPassword());
-				System.out.println(email);
-				System.out.println(password);
 				
-				Welcome welcomeWindow = new Welcome();
-				frmLogin.setVisible(false);
-				welcomeWindow.setVisible(true);
-				welcomeWindow.setBounds(0, 0, 500, 400);
-				 JLabel wel_label = new JLabel("Welcome: "+email);  
-		            welcomeWindow.getContentPane().add(wel_label);  
+				String psw = PasswordHash.hashing(String.valueOf(passwordFieldPassword.getPassword()));
+				System.out.println(psw);
+				
+				String email = textFieldEmail.getText() ;
+				System.err.println(psw);
+				if(email.equals("")) {
+					
+					JOptionPane.showMessageDialog(null, "az e-mail nem lehet üres", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
+					return;
+				}
+				if( String.valueOf(passwordFieldPassword.getPassword()).equals("")) {
+					
+					JOptionPane.showMessageDialog(null, "a jelszó nem lehet üres", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
+					return;
+				}
+				Boolean loggedIn = DBHAndler2.checkLogin(email, psw);
+				if(loggedIn) {
+					Welcome welcomeWindow = new Welcome();
+					frmLogin.setVisible(false);
+					welcomeWindow.setVisible(true);
+					welcomeWindow.setBounds(0, 0, 500, 400);
+					
+				}else {
+					return;
+				}
+				
 				
 			}
 		});
