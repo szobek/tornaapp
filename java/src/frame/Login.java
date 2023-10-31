@@ -69,12 +69,12 @@ public class Login {
 		lblPassword.setBounds(94, 177, 46, 14);
 		frmLogin.getContentPane().add(lblPassword);
 
-		textFieldEmail = new JTextField();
+		textFieldEmail = new JTextField("kn");
 		textFieldEmail.setBounds(150, 135, 107, 20);
 		frmLogin.getContentPane().add(textFieldEmail);
 		textFieldEmail.setColumns(10);
 
-		passwordFieldPassword = new JPasswordField();
+		passwordFieldPassword = new JPasswordField("rrrrrr");
 		passwordFieldPassword.setBounds(150, 174, 107, 20);
 		frmLogin.getContentPane().add(passwordFieldPassword);
 
