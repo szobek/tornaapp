@@ -15,6 +15,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTable;
 import java.awt.Toolkit;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
 
 public class Welcome extends JFrame {
 	/**
@@ -30,6 +31,7 @@ private Object[][] tableData;
 		
 		setTitle("Villámtánc");
 		getContentPane().setLayout(null);
+		
 				setDefaultCloseOperation(EXIT_ON_CLOSE);
 		createMenu();
 		
@@ -100,6 +102,19 @@ this.users = DBHAndler2.getAllFromDB();
 		
 		
 		scrollPane2.setViewportView(table);
+		//removeAllRows(table);
+		
+		JButton btnDeleteAllRows = new JButton("minden sor törlés");
+		getContentPane().add(btnDeleteAllRows);
+		btnDeleteAllRows.setMnemonic('m');
+		btnDeleteAllRows.setBounds(200, 200, 150, 20);
+		btnDeleteAllRows.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				removeAllRows(table);
+				btnDeleteAllRows.setVisible(tableModel.getRowCount()>0);
+			}
+		});
+		
 	}
 	
 	private void createRows() {
@@ -114,6 +129,15 @@ this.users = DBHAndler2.getAllFromDB();
 	}
 	
 	private void createNewUser() {
+		
+	}
+	
+	public void removeAllRows(JTable table) {
+		DefaultTableModel dm = (DefaultTableModel) table.getModel();
+		int rowCount = dm.getRowCount();
+		for (int i = rowCount - 1; i >= 0; i--) {
+			dm.removeRow(i);
+		}
 		
 	}
 }
