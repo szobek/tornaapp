@@ -106,10 +106,10 @@ public class Login {
 			public void actionPerformed(ActionEvent e) {
 				
 				String psw = PasswordHash.hashing(String.valueOf(passwordFieldPassword.getPassword()));
-				System.out.println(psw);
+				
 				
 				String email = textFieldEmail.getText() ;
-				System.err.println(psw);
+				
 				if(email.equals("")) {
 					
 					JOptionPane.showMessageDialog(null, "az e-mail nem lehet üres", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
