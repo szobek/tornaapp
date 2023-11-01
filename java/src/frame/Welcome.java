@@ -140,7 +140,7 @@ public class Welcome extends JFrame {
 	}
 
 	private void createRows() {
-		
+
 		for (int i = 0; i < users.size(); i++) {
 			tableData[i][0] = users.get(i).getUserName();
 
@@ -195,8 +195,20 @@ public class Welcome extends JFrame {
 		panel.add(textFieldNewUserLastName);
 		textFieldNewUserLastName.setColumns(10);
 
+		JButton btnCancelSaveUser = new JButton("Mégse");
+		btnCancelSaveUser.setBounds(20, 270, 90, 25);
+		btnCancelSaveUser.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getUsersAndShow();
+
+			}
+		});
+		panel.add(btnCancelSaveUser);
+
 		JButton btnSaveUser = new JButton("Mentés");
-		btnSaveUser.setBounds(221, 272, 89, 23);
+		btnSaveUser.setBounds(221, 272, 90, 25);
 		btnSaveUser.addActionListener(new ActionListener() {
 
 			@Override
