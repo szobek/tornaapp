@@ -124,7 +124,7 @@ public class DBHAndler2 {
 		if (con != null) {
 			try {
 				String query = "INSERT INTO `users` (`id`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES (NULL, '"
-						+ newUser.getUserEmail() + "', 'CTfo3', NULL, NULL, NULL);";
+						+ newUser.getEmail() + "', 'CTfo3', NULL, NULL, NULL);";
 				Statement stmt = con.createStatement();
 
 				stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
@@ -134,7 +134,7 @@ public class DBHAndler2 {
 				}
 
 				query = "insert into user_data (id,user_id,first_name,last_name,phone) values(null," + id + ",'"
-						+ newUser.getFirstName() + "','" + newUser.getLastName() + "','" + newUser.getUserPhone() + "')";
+						+ newUser.getFirstName() + "','" + newUser.getLastName() + "','" + newUser.getPhone() + "')";
 				stmt = con.createStatement();
 				stmt.executeUpdate(query);
 

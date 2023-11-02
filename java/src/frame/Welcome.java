@@ -7,18 +7,23 @@ import javax.swing.JList;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JTable;
 import java.awt.Toolkit;
 import javax.swing.table.DefaultTableModel;
 
 import welcome.WelcomeFunctions;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -49,7 +54,8 @@ public class Welcome extends JFrame {
 
 		setTitle("Villámtánc");
 		getContentPane().setLayout(null);
-		;
+		
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		createMenu();
 
@@ -89,7 +95,8 @@ public class Welcome extends JFrame {
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Új felhasználó");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createNewUserInputshow();
+				ExerciseUser user = new ExerciseUser("", "", "", "");
+				createNewUserInputshow(user);
 
 			}
 		});
@@ -103,32 +110,51 @@ public class Welcome extends JFrame {
 		hideAllComponent();
 		this.users = DBHAndler2.getAllFromDB();
 		scrollPane2 = new JScrollPane();
-		scrollPane2.setBounds(10, 20, 400, 150);
+		scrollPane2.setBounds(10, 20, 600, 200);
 		getContentPane().add(scrollPane2);
 
-		String[] columnNames = { "Név", "Telefon", "E-mail" };
-		tableData = new Object[users.size()][3];
+		String[] columnNames = { "Név", "Telefon", "E-mail"," Lehetőségek" };
+		tableData = new Object[users.size()][4];
 		createRows();
 		DefaultTableModel tableModel = new DefaultTableModel(tableData, columnNames);
-		table = new JTable(tableModel);
+		table = new JTable(tableModel) {
+			/**
+			* 
+			*/
+			private static final long serialVersionUID = 1L;
 
+			
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			public Class getColumnClass(int column) {
+				return (column == 3) ? JButton.class : Object.class;
+			}
+
+		};
+		
+		
+				
 		table.setBackground(new Color(153, 204, 255));
 		table.setForeground(new Color(0, 102, 153));
 		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		table.setAutoCreateRowSorter(true);
 
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent e) {
+	           
+	        	if (!e.getValueIsAdjusting() && table.getSelectedRow()  !=-1 ) {
+					
+					StringBuilder row = new StringBuilder();
+					row.append(table.getModel().getValueAt(table.getSelectedRow(), 0).toString() + " ");
+					row.append(table.getModel().getValueAt(table.getSelectedRow(), 1).toString());
+					row.append(", e-mail: ");
+					row.append(table.getModel().getValueAt(table.getSelectedRow(), 2).toString());
+					JOptionPane.showMessageDialog(null, row, "adatok", JOptionPane.PLAIN_MESSAGE, null);
+				}
+	           
+	        }
+	    });
 		scrollPane2.setViewportView(table);
-		// removeAllRows(table);
-
-		JButton btnDeleteAllRows = new JButton("minden sor törlés");
-		// getContentPane().add(btnDeleteAllRows);
-		btnDeleteAllRows.setMnemonic('m');
-		btnDeleteAllRows.setBounds(200, 200, 150, 20);
-		btnDeleteAllRows.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				removeAllRows(table);
-				btnDeleteAllRows.setVisible(tableModel.getRowCount() > 0);
-			}
-		});
+		
 
 	}
 
@@ -144,14 +170,27 @@ public class Welcome extends JFrame {
 		for (int i = 0; i < users.size(); i++) {
 			tableData[i][0] = users.get(i).getUserName();
 
-			tableData[i][1] = users.get(i).getUserPhone();
-			tableData[i][2] = users.get(i).getUserEmail();
+			tableData[i][1] = users.get(i).getPhone();
+			tableData[i][2] = users.get(i).getEmail();
+			tableData[i][3] = createButtons()[0];
 
 		}
 
 	}
+	
+	private JButton[] createButtons() {
+		JButton[] buttons = new JButton[3];
+		
+		JButton deleteUser = new JButton("X");
+		deleteUser.setBounds(1, 1, 20, 20);
+		return buttons;
+		
+		
+	}
+	
+	
 
-	private void createNewUserInputshow() {
+	private void createNewUserInputshow(ExerciseUser user ) {
 		hideAllComponent();
 		panel = new JPanel();
 		panel.setBounds(33, 11, 320, 300);
@@ -175,22 +214,22 @@ public class Welcome extends JFrame {
 		lblNewUserLastName.setBounds(28, 86, 62, 14);
 		panel.add(lblNewUserLastName);
 
-		textFieldNewUserEmail = new JTextField();
+		textFieldNewUserEmail = new JTextField(user.getEmail());
 		textFieldNewUserEmail.setBounds(105, 8, 86, 20);
 		panel.add(textFieldNewUserEmail);
 		textFieldNewUserEmail.setColumns(10);
 
-		textFieldNewUserPhone = new JTextField();
+		textFieldNewUserPhone = new JTextField(user.getPhone());
 		textFieldNewUserPhone.setBounds(105, 33, 86, 20);
 		panel.add(textFieldNewUserPhone);
 		textFieldNewUserPhone.setColumns(10);
 
-		textFieldNewUserFirstName = new JTextField();
+		textFieldNewUserFirstName = new JTextField(user.getFirstName());
 		textFieldNewUserFirstName.setBounds(105, 58, 86, 20);
 		panel.add(textFieldNewUserFirstName);
 		textFieldNewUserFirstName.setColumns(10);
 
-		textFieldNewUserLastName = new JTextField();
+		textFieldNewUserLastName = new JTextField(user.getLastName());
 		textFieldNewUserLastName.setBounds(105, 83, 86, 20);
 		panel.add(textFieldNewUserLastName);
 		textFieldNewUserLastName.setColumns(10);

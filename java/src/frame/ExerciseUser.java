@@ -25,14 +25,6 @@ public class ExerciseUser {
 		return firstName + " " + lastName ;
 	}
 	
-	public String getUserPhone() {
-		return phone;
-	}
-	
-	public String getUserEmail() {
-		
-		return email;
-	}
 
 	public String getPhone() {
 		return phone;

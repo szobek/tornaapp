@@ -69,7 +69,7 @@ public class Login {
 		lblPassword.setBounds(94, 177, 46, 14);
 		frmLogin.getContentPane().add(lblPassword);
 
-		textFieldEmail = new JTextField("kn");
+		textFieldEmail = new JTextField("kunszt.norbert@gmail.com");
 		textFieldEmail.setBounds(150, 135, 107, 20);
 		frmLogin.getContentPane().add(textFieldEmail);
 		textFieldEmail.setColumns(10);
@@ -125,7 +125,7 @@ public class Login {
 					Welcome welcomeWindow = new Welcome();
 					frmLogin.setVisible(false);
 					welcomeWindow.setVisible(true);
-					welcomeWindow.setBounds(0, 0, 500, 400);
+					welcomeWindow.setBounds(0, 0, 680, 400);
 					
 				}else {
 					JOptionPane.showMessageDialog(null, "a jelszó vagy az email hibás", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
