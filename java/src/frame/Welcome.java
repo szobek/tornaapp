@@ -119,11 +119,10 @@ public class Welcome extends JFrame {
 		DefaultTableModel tableModel = new DefaultTableModel(tableData, columnNames);
 		table = new JTable(tableModel) {
 			/**
-			* 
-			*/
+			 * 
+			 */
 			private static final long serialVersionUID = 1L;
 
-			
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public Class getColumnClass(int column) {
 				return (column == 3) ? JButton.class : Object.class;
@@ -142,13 +141,22 @@ public class Welcome extends JFrame {
 	        public void valueChanged(ListSelectionEvent e) {
 	           
 	        	if (!e.getValueIsAdjusting() && table.getSelectedRow()  !=-1 ) {
+					String email = table.getModel().getValueAt(table.getSelectedRow(), 2).toString();
 					
+					System.out.println(email);
+					int i = 0;
+					while(!users.get(i).getEmail().equals(email)) {i++;}
+					System.out.println("a user:"+users.get(i).getUserName());
+					createNewUserInputshow(users.get(i));
+	        		/*
 					StringBuilder row = new StringBuilder();
 					row.append(table.getModel().getValueAt(table.getSelectedRow(), 0).toString() + " ");
 					row.append(table.getModel().getValueAt(table.getSelectedRow(), 1).toString());
 					row.append(", e-mail: ");
 					row.append(table.getModel().getValueAt(table.getSelectedRow(), 2).toString());
 					JOptionPane.showMessageDialog(null, row, "adatok", JOptionPane.PLAIN_MESSAGE, null);
+					
+					*/
 				}
 	           
 	        }
@@ -172,7 +180,7 @@ public class Welcome extends JFrame {
 
 			tableData[i][1] = users.get(i).getPhone();
 			tableData[i][2] = users.get(i).getEmail();
-			tableData[i][3] = createButtons()[0];
+			tableData[i][3] = new JButton("X");
 
 		}
 
@@ -201,6 +209,7 @@ public class Welcome extends JFrame {
 		lblNewUserEmail = new JLabel("E-mail");
 		lblNewUserEmail.setBounds(28, 11, 46, 14);
 		panel.add(lblNewUserEmail);
+		
 
 		lblNewUserPhone = new JLabel("Phone");
 		lblNewUserPhone.setBounds(28, 36, 46, 14);
@@ -218,6 +227,7 @@ public class Welcome extends JFrame {
 		textFieldNewUserEmail.setBounds(105, 8, 86, 20);
 		panel.add(textFieldNewUserEmail);
 		textFieldNewUserEmail.setColumns(10);
+		if(!user.getEmail().equals("")) textFieldNewUserEmail.setEnabled(false);
 
 		textFieldNewUserPhone = new JTextField(user.getPhone());
 		textFieldNewUserPhone.setBounds(105, 33, 86, 20);
@@ -252,14 +262,31 @@ public class Welcome extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ExerciseUser newUser = new ExerciseUser(textFieldNewUserPhone.getText(),
-						textFieldNewUserFirstName.getText(), textFieldNewUserLastName.getText(),
-						textFieldNewUserEmail.getText());
-				createNewUserInDb(newUser);
+				if(user.getEmail().equals("")) {
+					ExerciseUser newUser = new ExerciseUser(textFieldNewUserPhone.getText(),
+							textFieldNewUserFirstName.getText(), textFieldNewUserLastName.getText(),
+							textFieldNewUserEmail.getText());
+					createNewUserInDb(newUser);
+				}
+				else {
+					user.setFirstName(textFieldNewUserFirstName.getText());
+					user.setLastName(textFieldNewUserLastName.getText());
+					user.setPhone(textFieldNewUserPhone.getText());
+					updateUserData(user);
+				}
+				
 			}
 		});
 		panel.add(btnSaveUser);
 
+	}
+	
+	private void updateUserData(ExerciseUser user) {
+		if(DBHAndler2.UpdateUserData(user)) {
+			getUsersAndShow();
+		} else {
+			System.err.println("hiba update közben");
+		} 
 	}
 
 	private void createNewUserInDb(ExerciseUser user) {
