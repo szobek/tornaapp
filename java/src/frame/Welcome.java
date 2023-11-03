@@ -124,7 +124,7 @@ public class Welcome extends JFrame {
 		getContentPane().add(panelUserList);
 		panelUserList.add(scrollPane2);
 
-		String[] columnNames = { "Név", "Telefon", "E-mail"," Lehetőségek" };
+		String[] columnNames = { "Név", "Telefon", "E-mail"};
 		tableData = new Object[users.size()][4];
 		createRows();
 		DefaultTableModel tableModel = new DefaultTableModel(tableData, columnNames);
@@ -198,7 +198,7 @@ public class Welcome extends JFrame {
 
 			tableData[i][1] = users.get(i).getPhone();
 			tableData[i][2] = users.get(i).getEmail();
-			tableData[i][3] = createImages()[0]; 
+			
 
 		}
 
