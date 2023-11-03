@@ -131,22 +131,29 @@ public class Welcome extends JFrame {
 		};
 		
 		
-				
+		ListSelectionModel select = table.getSelectionModel();
+		select.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 		table.setBackground(new Color(153, 204, 255));
 		table.setForeground(new Color(0, 102, 153));
 		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		table.setAutoCreateRowSorter(true);
 
+		table.setSelectionBackground(new Color(0, 204, 255));
+		table.setRowHeight(40);
+
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 	        public void valueChanged(ListSelectionEvent e) {
 	           
 	        	if (!e.getValueIsAdjusting() && table.getSelectedRow()  !=-1 ) {
-					String email = table.getModel().getValueAt(table.getSelectedRow(), 2).toString();
+					int a = table.convertRowIndexToModel(table.getSelectedRow());
+					String email = table.getModel().getValueAt(a, 2).toString();
 					
-					System.out.println(email);
+					
+					
 					int i = 0;
 					while(!users.get(i).getEmail().equals(email)) {i++;}
-					System.out.println("a user:"+users.get(i).getUserName());
+					
 					createNewUserInputshow(users.get(i));
 	        		/*
 					StringBuilder row = new StringBuilder();
