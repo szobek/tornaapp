@@ -31,7 +31,7 @@ public class DBHAndler2 {
 		ArrayList<ExerciseUser> users = new ArrayList<ExerciseUser>();
 		if (con != null) {
 			try {
-				String query = "select users.email,phone,first_name,last_name from user_data inner join users on users.id=user_data.user_id";
+				String query = "select users.email,phone,first_name,last_name from user_data inner join users on users.id=user_data.user_id where users.deleted=0";
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
 				while (rs.next())
@@ -155,7 +155,7 @@ public class DBHAndler2 {
 		boolean success=false;
 		if (con != null) {
 			try {
-				System.out.println(" db handler user:"+user.getUserName());
+				
 				String query = "UPDATE `user_data` inner join users on users.id=user_data.user_id SET `first_name` = ?, `last_name`=?,`phone`=? WHERE users.email = ?";
 				
 				PreparedStatement preparedStmt = con.prepareStatement(query);
@@ -177,4 +177,39 @@ public class DBHAndler2 {
 		}
 		return success;
 	}
+	
+	public static boolean deleteUser(ExerciseUser user) {
+		Connection con = connectToDb();
+		boolean success=false;
+		if (con != null) {
+			try {
+				
+				String query = "UPDATE `user_data` inner join users on users.id=user_data.user_id SET `first_name` = ?, `last_name`=?,`phone`=? WHERE users.email = ?";
+				
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+			      preparedStmt.setString(1, "");
+			      preparedStmt.setString(2, "");
+			      preparedStmt.setString(3, "");
+			      preparedStmt.setString(4, user.getEmail());
+			       
+			     
+			      preparedStmt.executeUpdate();
+			      
+			      
+			      query = "UPDATE `users` set deleted=1 WHERE users.email = ?";
+					
+					preparedStmt = con.prepareStatement(query);
+				      preparedStmt.setString(1, user.getEmail());
+				      // 
+				     
+				      preparedStmt.executeUpdate();  
+			      con.close();
+			      success=true;
+			} catch (SQLException e) {
+				System.err.println(e.getMessage());
+			}
+		} else {
+			System.err.println("hiba...");
+		}
+		return success;	}
 }

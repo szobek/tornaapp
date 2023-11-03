@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
@@ -24,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import welcome.WelcomeFunctions;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -48,6 +50,7 @@ public class Welcome extends JFrame {
 	private JLabel lblNewUserEmail;
 	private JScrollPane scrollPane2;
 	private JPanel panel;
+	private JPanel panelUserList;
 
 	public Welcome() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
@@ -108,10 +111,18 @@ public class Welcome extends JFrame {
 
 	private void getUsersAndShow() {
 		hideAllComponent();
+		panelUserList = new JPanel();
+		panelUserList.setBounds(10, 20, 650, 300);
+		panelUserList.setBackground(Color.cyan);
+		getContentPane().add(panelUserList);
+		panelUserList.setLayout(null);
+		
+		panelUserList.setBorder(new LineBorder(new Color(0, 0, 0)));
 		this.users = DBHAndler2.getAllFromDB();
 		scrollPane2 = new JScrollPane();
-		scrollPane2.setBounds(10, 20, 600, 200);
-		getContentPane().add(scrollPane2);
+		scrollPane2.setBounds(5, 20, 600, 200);
+		getContentPane().add(panelUserList);
+		panelUserList.add(scrollPane2);
 
 		String[] columnNames = { "Név", "Telefon", "E-mail"," Lehetőségek" };
 		tableData = new Object[users.size()][4];
@@ -125,7 +136,7 @@ public class Welcome extends JFrame {
 
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public Class getColumnClass(int column) {
-				return (column == 3) ? JButton.class : Object.class;
+				return (column == 3) ? Icon.class : Object.class;
 			}
 
 		};
@@ -134,13 +145,13 @@ public class Welcome extends JFrame {
 		ListSelectionModel select = table.getSelectionModel();
 		select.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		table.setBackground(new Color(153, 204, 255));
-		table.setForeground(new Color(0, 102, 153));
+		table.setBackground(Color.lightGray);
+		table.setForeground(Color.white);
 		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		table.setAutoCreateRowSorter(true);
 
 		table.setSelectionBackground(new Color(0, 204, 255));
-		table.setRowHeight(40);
+		table.setRowHeight(25);
 
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 	        public void valueChanged(ListSelectionEvent e) {
@@ -174,8 +185,8 @@ public class Welcome extends JFrame {
 	}
 
 	private void hideAllComponent() {
-		if (scrollPane2 != null)
-			scrollPane2.setVisible(false);
+		if (panelUserList != null)
+			panelUserList.setVisible(false);
 		if (panel != null)
 			panel.setVisible(false);
 	}
@@ -187,10 +198,23 @@ public class Welcome extends JFrame {
 
 			tableData[i][1] = users.get(i).getPhone();
 			tableData[i][2] = users.get(i).getEmail();
-			tableData[i][3] = new JButton("X");
+			tableData[i][3] = createImages()[0]; 
 
 		}
 
+	}
+	
+	private Icon[] createImages() {
+		Icon[] icons = new Icon[2];
+		icons[0]=new ImageIcon(
+				this.getClass().getResource(""
+						+ "/images/male.png"));
+		icons[0]=new ImageIcon(
+				this.getClass().getResource(""
+						+ "/images/male.png"));
+		
+		return icons;
+		
 	}
 	
 	private JButton[] createButtons() {
@@ -209,6 +233,7 @@ public class Welcome extends JFrame {
 		hideAllComponent();
 		panel = new JPanel();
 		panel.setBounds(33, 11, 320, 300);
+		panel.setBackground(new Color(200,200,200));
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -232,27 +257,50 @@ public class Welcome extends JFrame {
 
 		textFieldNewUserEmail = new JTextField(user.getEmail());
 		textFieldNewUserEmail.setBounds(105, 8, 86, 20);
-		panel.add(textFieldNewUserEmail);
+		
 		textFieldNewUserEmail.setColumns(10);
-		if(!user.getEmail().equals("")) textFieldNewUserEmail.setEnabled(false);
+		if(!user.getEmail().equals("")) {
+			JLabel lblUserEmail = new JLabel(user.getEmail());
+			lblUserEmail.setBounds(105, 8, 200, 20);
+			panel.add(lblUserEmail);
+			JButton deleteUser = new JButton("Törlés");
+			deleteUser.setBounds(120, 270, 90, 25);
+			deleteUser.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+				
+				if(JOptionPane.showConfirmDialog(null, "Valóban törli?", "Törlés", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+					
+					if(DBHAndler2.deleteUser(user)) getUsersAndShow();
+				}
+					
+				}
+			});
+			panel.add(deleteUser);
+					
+		}else {
+			panel.add(textFieldNewUserEmail);
+		}
 
 		textFieldNewUserPhone = new JTextField(user.getPhone());
-		textFieldNewUserPhone.setBounds(105, 33, 86, 20);
+		textFieldNewUserPhone.setBounds(105, 33, 120, 20);
 		panel.add(textFieldNewUserPhone);
 		textFieldNewUserPhone.setColumns(10);
 
 		textFieldNewUserFirstName = new JTextField(user.getFirstName());
-		textFieldNewUserFirstName.setBounds(105, 58, 86, 20);
+		textFieldNewUserFirstName.setBounds(105, 58, 120, 20);
 		panel.add(textFieldNewUserFirstName);
 		textFieldNewUserFirstName.setColumns(10);
 
 		textFieldNewUserLastName = new JTextField(user.getLastName());
-		textFieldNewUserLastName.setBounds(105, 83, 86, 20);
+		textFieldNewUserLastName.setBounds(105, 83, 120, 20);
 		panel.add(textFieldNewUserLastName);
 		textFieldNewUserLastName.setColumns(10);
 
 		JButton btnCancelSaveUser = new JButton("Mégse");
 		btnCancelSaveUser.setBounds(20, 270, 90, 25);
+		btnCancelSaveUser.setForeground(new Color(200,0,0));
 		btnCancelSaveUser.addActionListener(new ActionListener() {
 
 			@Override
@@ -264,7 +312,8 @@ public class Welcome extends JFrame {
 		panel.add(btnCancelSaveUser);
 
 		JButton btnSaveUser = new JButton("Mentés");
-		btnSaveUser.setBounds(221, 272, 90, 25);
+		btnSaveUser.setBounds(221, 270, 90, 25);
+		btnSaveUser.setForeground(new Color(0,200,0));
 		btnSaveUser.addActionListener(new ActionListener() {
 
 			@Override
