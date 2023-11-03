@@ -7,13 +7,15 @@ public class ExerciseUser {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private int userId;
 	
-	public ExerciseUser(String phone, String firstName, String lastName,String email) {
+	public ExerciseUser(String phone, String firstName, String lastName,String email,int userId) {
 		super();
 		this.phone = phone;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email=email;
+		this.userId=userId;
 	}
 
 	@Override

@@ -31,12 +31,12 @@ public class DBHAndler2 {
 		ArrayList<ExerciseUser> users = new ArrayList<ExerciseUser>();
 		if (con != null) {
 			try {
-				String query = "select users.email,phone,first_name,last_name from user_data inner join users on users.id=user_data.user_id where users.deleted=0";
+				String query = "select users.id,users.email,phone,first_name,last_name from user_data inner join users on users.id=user_data.user_id where users.deleted=0";
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
 				while (rs.next())
 					users.add(new ExerciseUser(rs.getString("phone"), rs.getString("first_name"),
-							rs.getString("last_name"), rs.getString("email")));
+							rs.getString("last_name"), rs.getString("email"),rs.getInt("id")));
 
 			} catch (SQLException e) {
 				System.err.println(e.getMessage());
@@ -69,7 +69,7 @@ public class DBHAndler2 {
 
 	}
 
-	public static ArrayList<Reserve> getReserved() {
+	public static ArrayList<Reserve> getAllReserved() {
 		ArrayList<Reserve> reserveList = new ArrayList<Reserve>();
 		Connection con = connectToDb();
 		if (con != null) {
@@ -78,7 +78,7 @@ public class DBHAndler2 {
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
 				while (rs.next())
-					System.out.println(rs.getString("user_id") + "  " + rs.getString("first_name"));
+					reserveList.add(new Reserve(rs.getDate("from_date"), rs.getDate("to_date"), rs.getTime("from_time"), rs.getTime("to_time"),rs.getInt("user_id")));
 
 			} catch (SQLException e) {
 				System.err.println(e.getMessage());
@@ -179,6 +179,7 @@ public class DBHAndler2 {
 	}
 	
 	public static boolean deleteUser(ExerciseUser user) {
+
 		Connection con = connectToDb();
 		boolean success=false;
 		if (con != null) {
@@ -212,4 +213,25 @@ public class DBHAndler2 {
 			System.err.println("hiba...");
 		}
 		return success;	}
+	public static String getNameById(int id) {
+		String name="";
+		Connection con = connectToDb();
+		if (con != null) {
+			try {
+				String query = "select * from user_data where user_id=?";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, id);
+				
+				ResultSet rs = stmt.executeQuery();
+					name=(rs.next())?rs.getString("first_name") + "  "+rs.getString("last_name"):"";
+
+			} catch (SQLException e) {
+				System.err.println(e.getMessage());
+			}
+		} else {
+			System.err.println("hiba...");
+		}		
+		
+		return name;
+	}
 }

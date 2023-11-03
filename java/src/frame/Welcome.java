@@ -51,14 +51,17 @@ public class Welcome extends JFrame {
 	private JScrollPane scrollPane2;
 	private JPanel panel;
 	private JPanel panelUserList;
+	private JPanel panelReserves;
+	private ArrayList<Reserve> reserves;
+	private JScrollPane scrollPaneReserves;
+	private Object[][] reservetableData;
 
 	public Welcome() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
 
 		setTitle("Villámtánc");
 		getContentPane().setLayout(null);
-		
-		
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		createMenu();
 
@@ -75,8 +78,10 @@ public class Welcome extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Foglalás lista");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DBHAndler2.getReserved();
+				showReserves();
+				
 			}
+
 		});
 		mnNewMenu.add(mntmNewMenuItem);
 
@@ -98,7 +103,7 @@ public class Welcome extends JFrame {
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Új felhasználó");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ExerciseUser user = new ExerciseUser("", "", "", "");
+				ExerciseUser user = new ExerciseUser("", "", "", "", 0);
 				createNewUserInputshow(user);
 
 			}
@@ -109,6 +114,38 @@ public class Welcome extends JFrame {
 		mnNewMenu_1.add(mntmNewMenuItem_3);
 	}
 
+	private void showReserves() {
+		hideAllComponent();
+		panelReserves = new JPanel();
+		panelReserves.setBounds(10, 20, 650, 300);
+		panelReserves.setBackground(Color.cyan);
+		getContentPane().add(panelReserves);
+		panelReserves.setLayout(null);
+		
+		panelReserves.setBorder(new LineBorder(new Color(0, 0, 0)));
+		this.reserves = DBHAndler2.getAllReserved();
+		scrollPaneReserves = new JScrollPane();
+		scrollPaneReserves.setBounds(5, 20, 600, 200);
+		
+		panelReserves.add(scrollPaneReserves);
+		
+		String[] columnNames = { "Dátumtól", "Dátumig", "Időtől","Időig", "Név" };
+		reservetableData = new Object[reserves.size()][5];
+		for (int i = 0; i < reserves.size(); i++) {
+			reservetableData[i][0] = reserves.get(i).getFromDate();
+
+			reservetableData[i][1] = reserves.get(i).getToDate();
+			reservetableData[i][2] = reserves.get(i).getFromTime();
+			reservetableData[i][3] = reserves.get(i).getToTime();
+			reservetableData[i][4] = DBHAndler2.getNameById(reserves.get(i).getUserId()) ;
+
+		}
+		
+		DefaultTableModel reservesTableModel = new DefaultTableModel(reservetableData, columnNames);
+		JTable reserveTable = new JTable(reservesTableModel);
+		scrollPaneReserves.setViewportView(reserveTable);
+	}
+
 	private void getUsersAndShow() {
 		hideAllComponent();
 		panelUserList = new JPanel();
@@ -116,15 +153,15 @@ public class Welcome extends JFrame {
 		panelUserList.setBackground(Color.cyan);
 		getContentPane().add(panelUserList);
 		panelUserList.setLayout(null);
-		
+
 		panelUserList.setBorder(new LineBorder(new Color(0, 0, 0)));
 		this.users = DBHAndler2.getAllFromDB();
 		scrollPane2 = new JScrollPane();
 		scrollPane2.setBounds(5, 20, 600, 200);
-		getContentPane().add(panelUserList);
+
 		panelUserList.add(scrollPane2);
 
-		String[] columnNames = { "Név", "Telefon", "E-mail"};
+		String[] columnNames = { "Név", "Telefon", "E-mail" };
 		tableData = new Object[users.size()][4];
 		createRows();
 		DefaultTableModel tableModel = new DefaultTableModel(tableData, columnNames);
@@ -140,11 +177,10 @@ public class Welcome extends JFrame {
 			}
 
 		};
-		
-		
+
 		ListSelectionModel select = table.getSelectionModel();
 		select.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
+
 		table.setBackground(Color.lightGray);
 		table.setForeground(Color.white);
 		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -153,34 +189,34 @@ public class Welcome extends JFrame {
 		table.setSelectionBackground(new Color(0, 204, 255));
 		table.setRowHeight(25);
 
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-	        public void valueChanged(ListSelectionEvent e) {
-	           
-	        	if (!e.getValueIsAdjusting() && table.getSelectedRow()  !=-1 ) {
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+
+				if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
 					int a = table.convertRowIndexToModel(table.getSelectedRow());
 					String email = table.getModel().getValueAt(a, 2).toString();
-					
-					
-					
+
 					int i = 0;
-					while(!users.get(i).getEmail().equals(email)) {i++;}
-					
+					while (!users.get(i).getEmail().equals(email)) {
+						i++;
+					}
+
 					createNewUserInputshow(users.get(i));
-	        		/*
-					StringBuilder row = new StringBuilder();
-					row.append(table.getModel().getValueAt(table.getSelectedRow(), 0).toString() + " ");
-					row.append(table.getModel().getValueAt(table.getSelectedRow(), 1).toString());
-					row.append(", e-mail: ");
-					row.append(table.getModel().getValueAt(table.getSelectedRow(), 2).toString());
-					JOptionPane.showMessageDialog(null, row, "adatok", JOptionPane.PLAIN_MESSAGE, null);
-					
-					*/
+					/*
+					 * StringBuilder row = new StringBuilder();
+					 * row.append(table.getModel().getValueAt(table.getSelectedRow(), 0).toString()
+					 * + " "); row.append(table.getModel().getValueAt(table.getSelectedRow(),
+					 * 1).toString()); row.append(", e-mail: ");
+					 * row.append(table.getModel().getValueAt(table.getSelectedRow(),
+					 * 2).toString()); JOptionPane.showMessageDialog(null, row, "adatok",
+					 * JOptionPane.PLAIN_MESSAGE, null);
+					 * 
+					 */
 				}
-	           
-	        }
-	    });
+
+			}
+		});
 		scrollPane2.setViewportView(table);
-		
 
 	}
 
@@ -189,6 +225,8 @@ public class Welcome extends JFrame {
 			panelUserList.setVisible(false);
 		if (panel != null)
 			panel.setVisible(false);
+		if (panelReserves != null)
+			panelReserves.setVisible(false);
 	}
 
 	private void createRows() {
@@ -198,42 +236,34 @@ public class Welcome extends JFrame {
 
 			tableData[i][1] = users.get(i).getPhone();
 			tableData[i][2] = users.get(i).getEmail();
-			
 
 		}
 
 	}
-	
+
 	private Icon[] createImages() {
 		Icon[] icons = new Icon[2];
-		icons[0]=new ImageIcon(
-				this.getClass().getResource(""
-						+ "/images/male.png"));
-		icons[0]=new ImageIcon(
-				this.getClass().getResource(""
-						+ "/images/male.png"));
-		
+		icons[0] = new ImageIcon(this.getClass().getResource("" + "/images/male.png"));
+		icons[0] = new ImageIcon(this.getClass().getResource("" + "/images/male.png"));
+
 		return icons;
-		
+
 	}
-	
+
 	private JButton[] createButtons() {
 		JButton[] buttons = new JButton[3];
-		
+
 		JButton deleteUser = new JButton("X");
 		deleteUser.setBounds(1, 1, 20, 20);
 		return buttons;
-		
-		
-	}
-	
-	
 
-	private void createNewUserInputshow(ExerciseUser user ) {
+	}
+
+	private void createNewUserInputshow(ExerciseUser user) {
 		hideAllComponent();
 		panel = new JPanel();
 		panel.setBounds(33, 11, 320, 300);
-		panel.setBackground(new Color(200,200,200));
+		panel.setBackground(new Color(200, 200, 200));
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -241,7 +271,6 @@ public class Welcome extends JFrame {
 		lblNewUserEmail = new JLabel("E-mail");
 		lblNewUserEmail.setBounds(28, 11, 46, 14);
 		panel.add(lblNewUserEmail);
-		
 
 		lblNewUserPhone = new JLabel("Phone");
 		lblNewUserPhone.setBounds(28, 36, 46, 14);
@@ -257,29 +286,31 @@ public class Welcome extends JFrame {
 
 		textFieldNewUserEmail = new JTextField(user.getEmail());
 		textFieldNewUserEmail.setBounds(105, 8, 86, 20);
-		
+
 		textFieldNewUserEmail.setColumns(10);
-		if(!user.getEmail().equals("")) {
+		if (!user.getEmail().equals("")) {
 			JLabel lblUserEmail = new JLabel(user.getEmail());
 			lblUserEmail.setBounds(105, 8, 200, 20);
 			panel.add(lblUserEmail);
 			JButton deleteUser = new JButton("Törlés");
 			deleteUser.setBounds(120, 270, 90, 25);
 			deleteUser.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-				
-				if(JOptionPane.showConfirmDialog(null, "Valóban törli?", "Törlés", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
-					
-					if(DBHAndler2.deleteUser(user)) getUsersAndShow();
-				}
-					
+
+					if (JOptionPane.showConfirmDialog(null, "Valóban törli?", "Törlés",
+							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+						if (DBHAndler2.deleteUser(user))
+							getUsersAndShow();
+					}
+
 				}
 			});
 			panel.add(deleteUser);
-					
-		}else {
+
+		} else {
 			panel.add(textFieldNewUserEmail);
 		}
 
@@ -300,7 +331,7 @@ public class Welcome extends JFrame {
 
 		JButton btnCancelSaveUser = new JButton("Mégse");
 		btnCancelSaveUser.setBounds(20, 270, 90, 25);
-		btnCancelSaveUser.setForeground(new Color(200,0,0));
+		btnCancelSaveUser.setForeground(new Color(200, 0, 0));
 		btnCancelSaveUser.addActionListener(new ActionListener() {
 
 			@Override
@@ -313,36 +344,35 @@ public class Welcome extends JFrame {
 
 		JButton btnSaveUser = new JButton("Mentés");
 		btnSaveUser.setBounds(221, 270, 90, 25);
-		btnSaveUser.setForeground(new Color(0,200,0));
+		btnSaveUser.setForeground(new Color(0, 200, 0));
 		btnSaveUser.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(user.getEmail().equals("")) {
+				if (user.getEmail().equals("")) {
 					ExerciseUser newUser = new ExerciseUser(textFieldNewUserPhone.getText(),
 							textFieldNewUserFirstName.getText(), textFieldNewUserLastName.getText(),
-							textFieldNewUserEmail.getText());
+							textFieldNewUserEmail.getText(), 1);
 					createNewUserInDb(newUser);
-				}
-				else {
+				} else {
 					user.setFirstName(textFieldNewUserFirstName.getText());
 					user.setLastName(textFieldNewUserLastName.getText());
 					user.setPhone(textFieldNewUserPhone.getText());
 					updateUserData(user);
 				}
-				
+
 			}
 		});
 		panel.add(btnSaveUser);
 
 	}
-	
+
 	private void updateUserData(ExerciseUser user) {
-		if(DBHAndler2.UpdateUserData(user)) {
+		if (DBHAndler2.UpdateUserData(user)) {
 			getUsersAndShow();
 		} else {
 			System.err.println("hiba update közben");
-		} 
+		}
 	}
 
 	private void createNewUserInDb(ExerciseUser user) {
