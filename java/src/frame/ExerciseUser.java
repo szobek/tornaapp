@@ -8,14 +8,18 @@ public class ExerciseUser {
 	private String lastName;
 	private String email;
 	private int userId;
+	private UserRight userRight;
 	
-	public ExerciseUser(String phone, String firstName, String lastName,String email,int userId) {
+	
+
+	public ExerciseUser(String phone, String firstName, String lastName,String email,int userId,UserRight userRight) {
 		super();
 		this.phone = phone;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email=email;
 		this.userId=userId;
+		this.userRight=userRight;
 	}
 
 	@Override
@@ -60,7 +64,13 @@ public class ExerciseUser {
 		this.lastName = lastName;
 	}
 
-	
+	public UserRight getUserRight() {
+		return userRight;
+	}
+
+	public void setUserRight(UserRight userRight) {
+		this.userRight = userRight;
+	}	
 	
 
 }

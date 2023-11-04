@@ -31,12 +31,12 @@ public class DBHAndler2 {
 		ArrayList<ExerciseUser> users = new ArrayList<ExerciseUser>();
 		if (con != null) {
 			try {
-				String query = "select users.id,users.email,phone,first_name,last_name from user_data inner join users on users.id=user_data.user_id where users.deleted=0";
+				String query = "select users.id,users.email,phone,first_name,last_name,user_rights.newuser,user_rights.listreserves from user_data inner join users on users.id=user_data.user_id inner join user_rights on user_rights.user_id=users.id where users.deleted=0";
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
 				while (rs.next()) {
 					users.add(new ExerciseUser(rs.getString("phone"), rs.getString("first_name"),
-							rs.getString("last_name"), rs.getString("email"),rs.getInt("id")));
+							rs.getString("last_name"), rs.getString("email"),rs.getInt("id"),new UserRight(rs.getInt("id"),rs.getBoolean("newuser"),rs.getBoolean("listreserves"))));
 				}
 					
 
@@ -260,5 +260,33 @@ public class DBHAndler2 {
 		}		
 		
 		return rights;
+	}
+	
+	public static boolean saveUserRightsInDB(ExerciseUser user) {
+		Connection con = connectToDb();
+		boolean success=false;
+		if (con != null) {
+			try {
+				
+				String query = "UPDATE `user_rights` set newuser=?, listreserves=? WHERE user_id= ?";
+				
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+			      preparedStmt.setBoolean(1,user.getUserRight().isCreateUser() );
+			      preparedStmt.setBoolean(2, user.getUserRight().isReserveList());
+			      preparedStmt.setInt(3, user.getUserId());
+			      
+			       
+			     
+			      preparedStmt.executeUpdate();
+			        
+			      con.close();
+			      success=true;
+			} catch (SQLException e) {
+				System.err.println(e.getMessage());
+			}
+		} else {
+			System.err.println("hiba...");
+		}
+		return success;			
 	}
 }

@@ -63,8 +63,6 @@ public class Welcome extends JFrame {
 
 		setTitle("Villámtánc");
 		getContentPane().setLayout(null);
-		
-		
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getAllData();
@@ -108,7 +106,7 @@ public class Welcome extends JFrame {
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Új felhasználó");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ExerciseUser user = new ExerciseUser("", "", "", "", 0);
+				ExerciseUser user = new ExerciseUser("", "", "", "", 0, new UserRight(0, false, false));
 				createUserInputshow(user);
 
 			}
@@ -373,7 +371,7 @@ public class Welcome extends JFrame {
 				if (user.getEmail().equals("")) {
 					ExerciseUser newUser = new ExerciseUser(textFieldNewUserPhone.getText(),
 							textFieldNewUserFirstName.getText(), textFieldNewUserLastName.getText(),
-							textFieldNewUserEmail.getText(), 1);
+							textFieldNewUserEmail.getText(), 1, new UserRight(1, false, false));
 					createNewUserInDb(newUser);
 				} else {
 					user.setFirstName(textFieldNewUserFirstName.getText());
@@ -430,23 +428,54 @@ public class Welcome extends JFrame {
 
 	private void userRightsShow(ExerciseUser user) {
 		hideAllComponent();
-		
+
 		UserRight userRights = DBHAndler2.getUserRightsFromDB(user.getUserId());
 		panelUserRights = new JPanel();
 		panelUserRights.setBounds(33, 11, 320, 300);
 		panelUserRights.setBackground(Color.lightGray);
 		getContentPane().add(panelUserRights);
-JCheckBox rightReservesList = new JCheckBox("Foglalás lista");
-rightReservesList.setSelected(userRights.isReserveList());
-rightReservesList.setBounds(10, 10, 100, 20);
+		JCheckBox rightReservesList = new JCheckBox("Foglalás lista");
+		rightReservesList.setSelected(userRights.isReserveList());
+		rightReservesList.setBounds(10, 10, 100, 20);
 
-JCheckBox rightCreateNewUser = new JCheckBox("Új felhasználó");
-rightCreateNewUser.setSelected(userRights.isCreateUser());
-rightCreateNewUser.setBounds(10, 45, 100, 20);
+		JCheckBox rightCreateNewUser = new JCheckBox("Új felhasználó");
+		rightCreateNewUser.setSelected(userRights.isCreateUser());
+		rightCreateNewUser.setBounds(10, 45, 100, 20);
 
-
-panelUserRights.add(rightReservesList);
-panelUserRights.add(rightCreateNewUser);
+		panelUserRights.add(rightReservesList);
+		panelUserRights.add(rightCreateNewUser);
+		
+		JButton btnSaveUserRights = new JButton("Mentés");
+		btnSaveUserRights.setBounds(221, 270, 90, 25);
+		btnSaveUserRights.setForeground(new Color(0, 200, 0));
+		btnSaveUserRights.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				user.setUserRight(new UserRight(user.getUserId(),rightReservesList.isSelected(),rightCreateNewUser.isSelected()));
+				
+				if(DBHAndler2.saveUserRightsInDB(user)) {getUsersAndShow();}
+				else JOptionPane.showMessageDialog(null, "Hiba történt");
+			}
+		});
+		
+		
+		JButton btnCancelSaveUserRights = new JButton("Mégse");
+		btnCancelSaveUserRights.setBounds(20, 270, 90, 25);
+		btnCancelSaveUserRights.setForeground(new Color(200, 0, 0));
+		btnCancelSaveUserRights.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getUsersAndShow();
+				
+			}
+		});
+		
+		
+		panelUserRights.add(btnSaveUserRights);
+		panelUserRights.add(btnCancelSaveUserRights);
 
 	}
 }
