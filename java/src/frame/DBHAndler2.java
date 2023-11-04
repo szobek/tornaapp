@@ -34,9 +34,11 @@ public class DBHAndler2 {
 				String query = "select users.id,users.email,phone,first_name,last_name from user_data inner join users on users.id=user_data.user_id where users.deleted=0";
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
-				while (rs.next())
+				while (rs.next()) {
 					users.add(new ExerciseUser(rs.getString("phone"), rs.getString("first_name"),
 							rs.getString("last_name"), rs.getString("email"),rs.getInt("id")));
+				}
+					
 
 			} catch (SQLException e) {
 				System.err.println(e.getMessage());

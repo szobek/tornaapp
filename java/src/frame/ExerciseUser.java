@@ -28,6 +28,10 @@ public class ExerciseUser {
 	}
 	
 
+	public int getUserId() {
+		return userId;
+	}
+
 	public String getPhone() {
 		return phone;
 	}

@@ -63,9 +63,12 @@ public class Welcome extends JFrame {
 		getContentPane().setLayout(null);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		getAllData();
 		createMenu();
 
 	}
+
+	
 
 	private void createMenu() {
 
@@ -123,7 +126,7 @@ public class Welcome extends JFrame {
 		panelReserves.setLayout(null);
 		
 		panelReserves.setBorder(new LineBorder(new Color(0, 0, 0)));
-		this.reserves = DBHAndler2.getAllReserved();
+		
 		scrollPaneReserves = new JScrollPane();
 		scrollPaneReserves.setBounds(5, 20, 600, 200);
 		
@@ -137,7 +140,7 @@ public class Welcome extends JFrame {
 			reservetableData[i][1] = reserves.get(i).getToDate();
 			reservetableData[i][2] = reserves.get(i).getFromTime();
 			reservetableData[i][3] = reserves.get(i).getToTime();
-			reservetableData[i][4] = DBHAndler2.getNameById(reserves.get(i).getUserId()) ;
+			reservetableData[i][4] = getUserNameById(reserves.get(i).getUserId()) ;
 
 		}
 		
@@ -147,6 +150,7 @@ public class Welcome extends JFrame {
 	}
 
 	private void getUsersAndShow() {
+		getAllData();
 		hideAllComponent();
 		panelUserList = new JPanel();
 		panelUserList.setBounds(10, 20, 650, 300);
@@ -155,7 +159,7 @@ public class Welcome extends JFrame {
 		panelUserList.setLayout(null);
 
 		panelUserList.setBorder(new LineBorder(new Color(0, 0, 0)));
-		this.users = DBHAndler2.getAllFromDB();
+		
 		scrollPane2 = new JScrollPane();
 		scrollPane2.setBounds(5, 20, 600, 200);
 
@@ -196,11 +200,11 @@ public class Welcome extends JFrame {
 					int a = table.convertRowIndexToModel(table.getSelectedRow());
 					String email = table.getModel().getValueAt(a, 2).toString();
 
+
 					int i = 0;
 					while (!users.get(i).getEmail().equals(email)) {
 						i++;
 					}
-
 					createNewUserInputshow(users.get(i));
 					/*
 					 * StringBuilder row = new StringBuilder();
@@ -389,5 +393,22 @@ public class Welcome extends JFrame {
 			dm.removeRow(i);
 		}
 
+	}
+	
+	public String getUserNameById(int id) {
+		String name = "";
+
+
+		int i = 0;
+		while (users.get(i).getUserId()!=id) {
+			i++;
+		}
+		name= users.get(i).getUserName();
+		return name;
+	}
+	
+	private void getAllData() {
+		this.users = DBHAndler2.getAllFromDB();
+		this.reserves = DBHAndler2.getAllReserved();		
 	}
 }
