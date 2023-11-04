@@ -30,6 +30,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
+import javax.swing.JCheckBox;
 
 public class Welcome extends JFrame {
 	/**
@@ -55,20 +56,21 @@ public class Welcome extends JFrame {
 	private ArrayList<Reserve> reserves;
 	private JScrollPane scrollPaneReserves;
 	private Object[][] reservetableData;
+	private JPanel panelUserRights;
 
 	public Welcome() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
 
 		setTitle("Villámtánc");
 		getContentPane().setLayout(null);
+		
+		
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getAllData();
 		createMenu();
 
 	}
-
-	
 
 	private void createMenu() {
 
@@ -82,7 +84,7 @@ public class Welcome extends JFrame {
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showReserves();
-				
+
 			}
 
 		});
@@ -107,14 +109,12 @@ public class Welcome extends JFrame {
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ExerciseUser user = new ExerciseUser("", "", "", "", 0);
-				createNewUserInputshow(user);
+				createUserInputshow(user);
 
 			}
 		});
 		mnNewMenu_1.add(mntmNewMenuItem_2);
 
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Jogok állítása");
-		mnNewMenu_1.add(mntmNewMenuItem_3);
 	}
 
 	private void showReserves() {
@@ -124,15 +124,15 @@ public class Welcome extends JFrame {
 		panelReserves.setBackground(Color.cyan);
 		getContentPane().add(panelReserves);
 		panelReserves.setLayout(null);
-		
+
 		panelReserves.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
+
 		scrollPaneReserves = new JScrollPane();
 		scrollPaneReserves.setBounds(5, 20, 600, 200);
-		
+
 		panelReserves.add(scrollPaneReserves);
-		
-		String[] columnNames = { "Dátumtól", "Dátumig", "Időtől","Időig", "Név" };
+
+		String[] columnNames = { "Dátumtól", "Dátumig", "Időtől", "Időig", "Név" };
 		reservetableData = new Object[reserves.size()][5];
 		for (int i = 0; i < reserves.size(); i++) {
 			reservetableData[i][0] = reserves.get(i).getFromDate();
@@ -140,10 +140,10 @@ public class Welcome extends JFrame {
 			reservetableData[i][1] = reserves.get(i).getToDate();
 			reservetableData[i][2] = reserves.get(i).getFromTime();
 			reservetableData[i][3] = reserves.get(i).getToTime();
-			reservetableData[i][4] = getUserNameById(reserves.get(i).getUserId()) ;
+			reservetableData[i][4] = getUserNameById(reserves.get(i).getUserId());
 
 		}
-		
+
 		DefaultTableModel reservesTableModel = new DefaultTableModel(reservetableData, columnNames);
 		JTable reserveTable = new JTable(reservesTableModel);
 		scrollPaneReserves.setViewportView(reserveTable);
@@ -159,7 +159,7 @@ public class Welcome extends JFrame {
 		panelUserList.setLayout(null);
 
 		panelUserList.setBorder(new LineBorder(new Color(0, 0, 0)));
-		
+
 		scrollPane2 = new JScrollPane();
 		scrollPane2.setBounds(5, 20, 600, 200);
 
@@ -200,12 +200,11 @@ public class Welcome extends JFrame {
 					int a = table.convertRowIndexToModel(table.getSelectedRow());
 					String email = table.getModel().getValueAt(a, 2).toString();
 
-
 					int i = 0;
 					while (!users.get(i).getEmail().equals(email)) {
 						i++;
 					}
-					createNewUserInputshow(users.get(i));
+					createUserInputshow(users.get(i));
 					/*
 					 * StringBuilder row = new StringBuilder();
 					 * row.append(table.getModel().getValueAt(table.getSelectedRow(), 0).toString()
@@ -226,11 +225,17 @@ public class Welcome extends JFrame {
 
 	private void hideAllComponent() {
 		if (panelUserList != null)
-			panelUserList.setVisible(false);
+			getContentPane().remove(panelUserList);
 		if (panel != null)
-			panel.setVisible(false);
+			getContentPane().remove(panel);
 		if (panelReserves != null)
-			panelReserves.setVisible(false);
+			getContentPane().remove(panelReserves);
+		if (panelUserRights != null)
+			getContentPane().remove(panelUserRights);
+
+		revalidate();
+		repaint();
+
 	}
 
 	private void createRows() {
@@ -263,7 +268,7 @@ public class Welcome extends JFrame {
 
 	}
 
-	private void createNewUserInputshow(ExerciseUser user) {
+	private void createUserInputshow(ExerciseUser user) {
 		hideAllComponent();
 		panel = new JPanel();
 		panel.setBounds(33, 11, 320, 300);
@@ -333,6 +338,18 @@ public class Welcome extends JFrame {
 		panel.add(textFieldNewUserLastName);
 		textFieldNewUserLastName.setColumns(10);
 
+		JButton btnSetUserRights = new JButton("Jogok szerkesztése");
+		btnSetUserRights.setBounds(20, 160, 150, 25);
+		panel.add(btnSetUserRights);
+		btnSetUserRights.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				userRightsShow(user);
+
+			}
+		});
+
 		JButton btnCancelSaveUser = new JButton("Mégse");
 		btnCancelSaveUser.setBounds(20, 270, 90, 25);
 		btnCancelSaveUser.setForeground(new Color(200, 0, 0));
@@ -394,21 +411,42 @@ public class Welcome extends JFrame {
 		}
 
 	}
-	
+
 	public String getUserNameById(int id) {
 		String name = "";
 
-
 		int i = 0;
-		while (users.get(i).getUserId()!=id) {
+		while (users.get(i).getUserId() != id) {
 			i++;
 		}
-		name= users.get(i).getUserName();
+		name = users.get(i).getUserName();
 		return name;
 	}
-	
+
 	private void getAllData() {
 		this.users = DBHAndler2.getAllFromDB();
-		this.reserves = DBHAndler2.getAllReserved();		
+		this.reserves = DBHAndler2.getAllReserved();
+	}
+
+	private void userRightsShow(ExerciseUser user) {
+		hideAllComponent();
+		
+		UserRight userRights = DBHAndler2.getUserRightsFromDB(user.getUserId());
+		panelUserRights = new JPanel();
+		panelUserRights.setBounds(33, 11, 320, 300);
+		panelUserRights.setBackground(Color.lightGray);
+		getContentPane().add(panelUserRights);
+JCheckBox rightReservesList = new JCheckBox("Foglalás lista");
+rightReservesList.setSelected(userRights.isReserveList());
+rightReservesList.setBounds(10, 10, 100, 20);
+
+JCheckBox rightCreateNewUser = new JCheckBox("Új felhasználó");
+rightCreateNewUser.setSelected(userRights.isCreateUser());
+rightCreateNewUser.setBounds(10, 45, 100, 20);
+
+
+panelUserRights.add(rightReservesList);
+panelUserRights.add(rightCreateNewUser);
+
 	}
 }

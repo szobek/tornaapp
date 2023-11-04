@@ -236,4 +236,29 @@ public class DBHAndler2 {
 		
 		return name;
 	}
+	public static UserRight getUserRightsFromDB(int id) {
+		UserRight rights=new UserRight();
+		Connection con = connectToDb();
+		if (con != null) {
+			try {
+				String query = "select * from user_rights where user_id=?";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setInt(1, id);
+				
+				ResultSet rs = stmt.executeQuery();
+				if(rs.next()) {
+					rights=new UserRight(id, rs.getBoolean("newuser"), rs.getBoolean("listreserves"));
+				}
+				
+					
+
+			} catch (SQLException e) {
+				System.err.println(e.getMessage());
+			}
+		} else {
+			System.err.println("hiba...");
+		}		
+		
+		return rights;
+	}
 }
