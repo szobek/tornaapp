@@ -21,12 +21,16 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.JTable;
 import java.awt.Toolkit;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
+import javax.swing.JTextPane;
+import javax.swing.DropMode;
 
 public class Welcome extends JFrame {
 	/**
@@ -55,6 +59,7 @@ public class Welcome extends JFrame {
 	private JPanel panelUserRights;
 	private ExerciseUser user;
 	private boolean createNewUser;
+	private JPanel panelWelcome;
 
 	public Welcome(ExerciseUser user) {
 		
@@ -63,6 +68,27 @@ public class Welcome extends JFrame {
 
 		setTitle("Villámtánc");
 		getContentPane().setLayout(null);
+		
+		panelWelcome = new JPanel();
+		panelWelcome.setBounds(10, 0, 399, 236);
+		getContentPane().add(panelWelcome);
+		panelWelcome.setLayout(null);
+		
+		JTextPane textPaneWelcomeText = new JTextPane();
+		textPaneWelcomeText.setEditable(false);
+		
+		textPaneWelcomeText.setText("Üdvözöllek az alkalmazásban!");
+		textPaneWelcomeText.setBounds(10, 11, 379, 35);
+		panelWelcome.add(textPaneWelcomeText);
+		
+		SimpleAttributeSet textStyle = new SimpleAttributeSet(); 
+        StyleConstants.setForeground(textStyle, Color.lightGray);
+        StyleConstants.setFontFamily(textStyle, "lucida bright italic");
+        StyleConstants.setFontSize(textStyle, 18);
+        StyleConstants.setAlignment(textStyle, StyleConstants.ALIGN_CENTER);
+        StyledDocument doc = textPaneWelcomeText.getStyledDocument();
+        doc.setCharacterAttributes(105, doc.getLength()-105, textStyle, false);
+        doc.setParagraphAttributes(0, 104, textStyle, false);
 		
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -484,5 +510,4 @@ public class Welcome extends JFrame {
 		panelUserRights.add(btnCancelSaveUserRights);
 
 	}
-
 }
