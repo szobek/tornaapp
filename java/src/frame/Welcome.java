@@ -57,28 +57,27 @@ public class Welcome extends JFrame {
 	private JScrollPane scrollPaneReserves;
 	private Object[][] reservetableData;
 	private JPanel panelUserRights;
-	private UserRight userLoggedRight;// ebben van a jelenleg bejelentkezett user joga
-	private int loggedUserId;// ebben van a jelenleg bejelentkezett user idja
+	
 
-	public Welcome(int id) {
+	public Welcome(ExerciseUser user) {
 		
-		loggedUserId = id;
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
 
 		setTitle("Villámtánc");
 		getContentPane().setLayout(null);
-		UserRight loggedUserRight = getLoggedUserRights();
+		
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getAllData();
 		System.out.println(users);
-		createMenu(id);
+		createMenu(user);
 
 	}
 
-	private void createMenu(int id) {
+	private void createMenu(ExerciseUser user) {
 
-		userLoggedRight = DBHAndler2.getUserRightsFromDB(id);
+		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -88,12 +87,12 @@ public class Welcome extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Foglalás lista");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showReserves();
+				showReserves(user);
 
 			}
 
 		});
-		if (userLoggedRight.isReserveList()) {
+		if (user.getUserRight().isReserveList()) {
 
 			mnNewMenu.add(mntmNewMenuItem);
 		}
@@ -122,14 +121,14 @@ public class Welcome extends JFrame {
 			}
 		});
 		
-		if(userLoggedRight.isCreateUser())		mnNewMenu_1.add(mntmNewMenuItem_2);
+		if(user.getUserRight().isCreateUser())		mnNewMenu_1.add(mntmNewMenuItem_2);
 
 	}
 
-	private void showReserves() {
+	private void showReserves(ExerciseUser user) {
 
 		hideAllComponent();
-		if(!userLoggedRight.isReserveList()) {
+		if(!user.getUserRight().isReserveList()) {
 			getUsersAndShow();
 			return;
 		}
@@ -284,10 +283,6 @@ public class Welcome extends JFrame {
 	}
 
 	private void createUserInputshow(ExerciseUser user) {
-		UserRight loggedUserRight = getLoggedUserRights();
-		boolean createNewUser =loggedUserRight.isCreateUser(); 
-		
-		
 		
 		
 		hideAllComponent();
@@ -347,7 +342,7 @@ public class Welcome extends JFrame {
 			textFieldNewUserFirstName.setText("");
 			textFieldNewUserLastName.setText("");
 			textFieldNewUserPhone.setText("");
-			if (!createNewUser  ) {
+			if (! user.getUserRight().isCreateUser()  ) {
 				getUsersAndShow();
 				
 				return;
@@ -445,7 +440,7 @@ public class Welcome extends JFrame {
 	}
 
 	private void createNewUserInDb(ExerciseUser user) {
-		if(userLoggedRight.isCreateUser()) {
+		if(user.getUserRight().isCreateUser()) {
 			if (DBHAndler2.saveNewUserInDb(user)) {
 				getUsersAndShow();
 			}	
@@ -536,8 +531,5 @@ public class Welcome extends JFrame {
 		panelUserRights.add(btnCancelSaveUserRights);
 
 	}
-	
-	private UserRight getLoggedUserRights() {
-		return  DBHAndler2.getUserRightsFromDB(loggedUserId);
-	}
+
 }

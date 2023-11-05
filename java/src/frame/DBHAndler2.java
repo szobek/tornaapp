@@ -92,21 +92,19 @@ public class DBHAndler2 {
 		return reserveList;
 	}
 
-	public static int[] checkLogin(String email, String password) {
-		int[] logged = new int[2];
+	public static ExerciseUser checkLogin(String email, String password) {
+		ExerciseUser user = null;
 		Connection con = connectToDb();
 		if (con != null) {
 			try {
-				String query = "select email,password,id from users where email=? and password=?";
+				String query = "select users.id,users.email,phone,first_name,last_name,user_rights.newuser,user_rights.listreserves from users inner join user_data on users.id=user_data.user_id inner join user_rights on user_rights.user_id=users.id where email=? and password=?";
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, email);
 				stmt.setString(2, password);
 				ResultSet rs = stmt.executeQuery();
 				if (rs.next()) {
 					
-					logged[0] = (email.equals(rs.getString("email")) && password.equals(rs.getString("password"))) ? 1
-							: 0;
-					logged[1]=rs.getInt("id");
+					user = new ExerciseUser(rs.getString("phone"), rs.getString("first_name"), rs.getString("last_name"), rs.getString("email"), rs.getInt("id"), new UserRight(rs.getInt("id"),rs.getBoolean("listreserves"),rs.getBoolean("newuser")));
 				} else {
 					System.err.println("hiba a loginnal");
 				}
@@ -117,7 +115,7 @@ public class DBHAndler2 {
 		} else {
 			System.err.println("hiba...");
 		}
-		return logged;
+		return user;
 	}
 	
 	
