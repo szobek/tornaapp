@@ -3,7 +3,7 @@ package frame;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
-import javax.swing.JList;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
-import java.awt.BorderLayout;
+
 import java.awt.Color;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
@@ -22,10 +22,6 @@ import javax.swing.JTable;
 import java.awt.Toolkit;
 import javax.swing.table.DefaultTableModel;
 
-import welcome.WelcomeFunctions;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -57,11 +53,12 @@ public class Welcome extends JFrame {
 	private JScrollPane scrollPaneReserves;
 	private Object[][] reservetableData;
 	private JPanel panelUserRights;
-	
+	private ExerciseUser user;
+	private boolean createNewUser;
 
 	public Welcome(ExerciseUser user) {
 		
-		
+		this.user=user;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
 
 		setTitle("Villámtánc");
@@ -70,12 +67,12 @@ public class Welcome extends JFrame {
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getAllData();
-		System.out.println(users);
-		createMenu(user);
+		
+		createMenu();
 
 	}
 
-	private void createMenu(ExerciseUser user) {
+	private void createMenu() {
 
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -87,7 +84,7 @@ public class Welcome extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Foglalás lista");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showReserves(user);
+				showReserves();
 
 			}
 
@@ -107,7 +104,7 @@ public class Welcome extends JFrame {
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				getUsersAndShow();
+				userListInTable();
 			}
 		});
 		mnNewMenu_1.add(mntmNewMenuItem_1);
@@ -125,11 +122,11 @@ public class Welcome extends JFrame {
 
 	}
 
-	private void showReserves(ExerciseUser user) {
+	private void showReserves() {
 
 		hideAllComponent();
-		if(!user.getUserRight().isReserveList()) {
-			getUsersAndShow();
+		if(!this.user.getUserRight().isReserveList()) {
+			userListInTable();
 			return;
 		}
 		panelReserves = new JPanel();
@@ -162,7 +159,7 @@ public class Welcome extends JFrame {
 		scrollPaneReserves.setViewportView(reserveTable);
 	}
 
-	private void getUsersAndShow() {
+	private void userListInTable() {
 		getAllData();
 		hideAllComponent();
 		panelUserList = new JPanel();
@@ -182,19 +179,7 @@ public class Welcome extends JFrame {
 		tableData = new Object[users.size()][4];
 		createRows();
 		DefaultTableModel tableModel = new DefaultTableModel(tableData, columnNames);
-		table = new JTable(tableModel) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@SuppressWarnings({ "unchecked", "rawtypes" })
-			public Class getColumnClass(int column) {
-				return (column == 3) ? Icon.class : Object.class;
-			}
-
-		};
-
+		table = new JTable(tableModel);
 		ListSelectionModel select = table.getSelectionModel();
 		select.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -218,16 +203,7 @@ public class Welcome extends JFrame {
 						i++;
 					}
 					createUserInputshow(users.get(i));
-					/*
-					 * StringBuilder row = new StringBuilder();
-					 * row.append(table.getModel().getValueAt(table.getSelectedRow(), 0).toString()
-					 * + " "); row.append(table.getModel().getValueAt(table.getSelectedRow(),
-					 * 1).toString()); row.append(", e-mail: ");
-					 * row.append(table.getModel().getValueAt(table.getSelectedRow(),
-					 * 2).toString()); JOptionPane.showMessageDialog(null, row, "adatok",
-					 * JOptionPane.PLAIN_MESSAGE, null);
-					 * 
-					 */
+					
 				}
 
 			}
@@ -264,31 +240,10 @@ public class Welcome extends JFrame {
 
 	}
 
-	private Icon[] createImages() {
-		Icon[] icons = new Icon[2];
-		icons[0] = new ImageIcon(this.getClass().getResource("" + "/images/male.png"));
-		icons[0] = new ImageIcon(this.getClass().getResource("" + "/images/male.png"));
 
-		return icons;
-
-	}
-
-	private JButton[] createButtons() {
-		JButton[] buttons = new JButton[3];
-
-		JButton deleteUser = new JButton("X");
-		deleteUser.setBounds(1, 1, 20, 20);
-		return buttons;
-
-	}
-
-	private void createUserInputshow(ExerciseUser user) {
-		
+	private void createUserInputshow(ExerciseUser createdUser) {
 		
 		hideAllComponent();
-		
-		
-		
 		panel = new JPanel();
 		panel.setBounds(33, 11, 320, 300);
 		panel.setBackground(new Color(200, 200, 200));
@@ -296,12 +251,12 @@ public class Welcome extends JFrame {
 		panel.setLayout(null);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 
-		textFieldNewUserPhone = new JTextField(user.getPhone());
-		textFieldNewUserEmail = new JTextField(user.getEmail());
-		textFieldNewUserFirstName = new JTextField(user.getFirstName());
-		textFieldNewUserLastName = new JTextField(user.getLastName());
+		textFieldNewUserPhone = new JTextField(createdUser.getPhone());
+		textFieldNewUserEmail = new JTextField(createdUser.getEmail());
+		textFieldNewUserFirstName = new JTextField(createdUser.getFirstName());
+		textFieldNewUserLastName = new JTextField(createdUser.getLastName());
 		
-		if (!user.getEmail().equals("")) {
+		if (!createdUser.getEmail().equals("")) {
 			// old user
 			JLabel lblUserEmail = new JLabel(user.getEmail());
 			lblUserEmail.setBounds(105, 8, 200, 20);
@@ -317,7 +272,7 @@ public class Welcome extends JFrame {
 							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
 						if (DBHAndler2.deleteUser(user))
-							getUsersAndShow();
+							userListInTable();
 					}
 
 				}
@@ -338,15 +293,12 @@ public class Welcome extends JFrame {
 
 		} else {
 			// new user
+			createNewUser=true;
 			textFieldNewUserEmail.setText("");
 			textFieldNewUserFirstName.setText("");
 			textFieldNewUserLastName.setText("");
 			textFieldNewUserPhone.setText("");
-			if (! user.getUserRight().isCreateUser()  ) {
-				getUsersAndShow();
-				
-				return;
-			} 
+			
 
 			panel.add(textFieldNewUserEmail);
 		}
@@ -396,7 +348,7 @@ public class Welcome extends JFrame {
 				textFieldNewUserFirstName.setText("");
 				textFieldNewUserLastName.setText("");
 				textFieldNewUserPhone.setText("");
-				getUsersAndShow();
+				userListInTable();
 
 			}
 		});
@@ -409,16 +361,17 @@ public class Welcome extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (user.getEmail().equals("")) {
+				if (createNewUser) {
 					ExerciseUser newUser = new ExerciseUser(textFieldNewUserPhone.getText(),
 							textFieldNewUserFirstName.getText(), textFieldNewUserLastName.getText(),
 							textFieldNewUserEmail.getText(), 1, new UserRight(1, false, false));
 					createNewUserInDb(newUser);
 				} else {
-					user.setFirstName(textFieldNewUserFirstName.getText());
-					user.setLastName(textFieldNewUserLastName.getText());
-					user.setPhone(textFieldNewUserPhone.getText());
-					updateUserData(user);
+					
+					createdUser.setFirstName(textFieldNewUserFirstName.getText());
+					createdUser.setLastName(textFieldNewUserLastName.getText());
+					createdUser.setPhone(textFieldNewUserPhone.getText());
+					updateUserData(createdUser);
 				}
 
 			}
@@ -433,7 +386,7 @@ public class Welcome extends JFrame {
 
 	private void updateUserData(ExerciseUser user) {
 		if (DBHAndler2.UpdateUserData(user)) {
-			getUsersAndShow();
+			userListInTable();
 		} else {
 			System.err.println("hiba update közben");
 		}
@@ -442,7 +395,7 @@ public class Welcome extends JFrame {
 	private void createNewUserInDb(ExerciseUser user) {
 		if(user.getUserRight().isCreateUser()) {
 			if (DBHAndler2.saveNewUserInDb(user)) {
-				getUsersAndShow();
+				userListInTable();
 			}	
 		}else {
 			JOptionPane.showMessageDialog(null, "Nincs jogosultsága", "Hibás jog", JOptionPane.ERROR_MESSAGE);
@@ -479,7 +432,7 @@ public class Welcome extends JFrame {
 	private void userRightsShow(ExerciseUser user) {
 		hideAllComponent();
 
-		UserRight userRights = DBHAndler2.getUserRightsFromDB(user.getUserId());
+		UserRight userRights = user.getUserRight();
 		panelUserRights = new JPanel();
 		panelUserRights.setBounds(33, 11, 320, 300);
 		panelUserRights.setBackground(Color.lightGray);
@@ -509,7 +462,7 @@ public class Welcome extends JFrame {
 						rightCreateNewUser.isSelected()));
 				
 				if (DBHAndler2.saveUserRightsInDB(user)) {
-					getUsersAndShow();
+					userListInTable();
 				} else
 					JOptionPane.showMessageDialog(null, "Hiba történt");
 			}
@@ -522,7 +475,7 @@ public class Welcome extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getUsersAndShow();
+				userListInTable();
 
 			}
 		});

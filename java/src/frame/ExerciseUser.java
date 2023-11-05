@@ -9,13 +9,7 @@ public class ExerciseUser {
 	private String email;
 	private int userId;
 	private UserRight userRight;
-	private boolean logged=false;
 	
-	
-
-	public void setLogged(boolean logged) {
-		this.logged = logged;
-	}
 
 	public ExerciseUser(String phone, String firstName, String lastName,String email,int userId,UserRight userRight) {
 		super();
