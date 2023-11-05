@@ -36,7 +36,8 @@ public class DBHAndler2 {
 				ResultSet rs = stmt.executeQuery(query);
 				while (rs.next()) {
 					users.add(new ExerciseUser(rs.getString("phone"), rs.getString("first_name"),
-							rs.getString("last_name"), rs.getString("email"),rs.getInt("id"),new UserRight(rs.getInt("id"),rs.getBoolean("newuser"),rs.getBoolean("listreserves"))));
+							rs.getString("last_name"), rs.getString("email"),rs.getInt("id"),
+							new UserRight(rs.getInt("id"),rs.getBoolean("listreserves"),rs.getBoolean("newuser"))));
 				}
 					
 
@@ -91,20 +92,21 @@ public class DBHAndler2 {
 		return reserveList;
 	}
 
-	public static boolean checkLogin(String email, String password) {
-		boolean logged = false;
+	public static int[] checkLogin(String email, String password) {
+		int[] logged = new int[2];
 		Connection con = connectToDb();
 		if (con != null) {
 			try {
-				String query = "select email,password from users where email=? and password=?";
+				String query = "select email,password,id from users where email=? and password=?";
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, email);
 				stmt.setString(2, password);
 				ResultSet rs = stmt.executeQuery();
 				if (rs.next()) {
 					
-					logged = (email.equals(rs.getString("email")) && password.equals(rs.getString("password"))) ? true
-							: false;
+					logged[0] = (email.equals(rs.getString("email")) && password.equals(rs.getString("password"))) ? 1
+							: 0;
+					logged[1]=rs.getInt("id");
 				} else {
 					System.err.println("hiba a loginnal");
 				}
@@ -117,7 +119,8 @@ public class DBHAndler2 {
 		}
 		return logged;
 	}
-
+	
+	
 	public static boolean saveNewUserInDb(ExerciseUser newUser) {
 		Connection con = connectToDb();
 		ResultSet rs;
@@ -140,6 +143,10 @@ public class DBHAndler2 {
 				stmt = con.createStatement();
 				stmt.executeUpdate(query);
 
+				query = "insert into user_rights (id,user_id,newuser,listreserves) values(null," + id + ",0,0)";
+				stmt = con.createStatement();
+				stmt.executeUpdate(query);
+				
 				con.close();
 				success=true;
 			} catch (SQLException e) {
@@ -236,6 +243,7 @@ public class DBHAndler2 {
 		
 		return name;
 	}
+	
 	public static UserRight getUserRightsFromDB(int id) {
 		UserRight rights=new UserRight();
 		Connection con = connectToDb();
@@ -247,7 +255,7 @@ public class DBHAndler2 {
 				
 				ResultSet rs = stmt.executeQuery();
 				if(rs.next()) {
-					rights=new UserRight(id, rs.getBoolean("newuser"), rs.getBoolean("listreserves"));
+					rights=new UserRight(id, rs.getBoolean("listreserves"), rs.getBoolean("newuser"));
 				}
 				
 					

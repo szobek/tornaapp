@@ -120,9 +120,9 @@ public class Login {
 					JOptionPane.showMessageDialog(null, "a jelszó nem lehet üres", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
 					return;
 				}
-				Boolean loggedIn = DBHAndler2.checkLogin(email, psw);
-				if(loggedIn) {
-					Welcome welcomeWindow = new Welcome();
+				int[] loggedIn = DBHAndler2.checkLogin(email, psw);
+				if(loggedIn[0]==1) {
+					Welcome welcomeWindow = new Welcome(loggedIn[1]);
 					frmLogin.setVisible(false);
 					welcomeWindow.setVisible(true);
 					welcomeWindow.setBounds(0, 0, 680, 400);
