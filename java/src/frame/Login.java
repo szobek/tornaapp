@@ -44,6 +44,7 @@ public class Login {
 	 */
 	public Login() {
 		initialize();
+		//System.out.println(ClassLoader.getSystemResource("./images/t.png"));	    
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class Login {
 		try {
 			
 			
-			JLabel pic = new JLabel(new ImageIcon(Login.class.getResource("/images/l.png")));
+			JLabel pic = new JLabel(new ImageIcon("./src/images/l.png"));
 			
 			
 			pic.setSize(277, 91);

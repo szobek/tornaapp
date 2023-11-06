@@ -15,6 +15,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
@@ -29,6 +31,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -71,6 +75,11 @@ public class Welcome {
 	 */
 	public Welcome(ExerciseUser user) {
 		frame=new JFrame();
+		
+		//ImageIcon img = new ImageIcon(ClassLoader.getSystemResource("./main/resources/t.png"));
+		//frame.setIconImage(img.getImage());
+		  
+		//frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/main/resources/t.png")));
 		this.user = user;
 		initialize();
 		
@@ -80,13 +89,13 @@ public class Welcome {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		
+
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
+
 
 		frame.setTitle("Villámtánc");
 		frame.getContentPane().setLayout(null);
@@ -95,6 +104,7 @@ public class Welcome {
 		panelWelcome.setBounds(10, 0, 399, 236);
 		frame.getContentPane().add(panelWelcome);
 		panelWelcome.setLayout(null);
+		 
 
 		JTextPane textPaneWelcomeText = new JTextPane();
 		textPaneWelcomeText.setEditable(false);
@@ -111,7 +121,6 @@ public class Welcome {
 		StyledDocument doc = textPaneWelcomeText.getStyledDocument();
 		doc.setCharacterAttributes(105, doc.getLength() - 105, textStyle, false);
 		doc.setParagraphAttributes(0, 104, textStyle, false);
-
 		
 		getAllData();
 
@@ -541,5 +550,11 @@ public class Welcome {
 	private void showHelp() {
 		JOptionPane.showMessageDialog(null, "kell content", "Súgó", JOptionPane.INFORMATION_MESSAGE);
 	}
-
+	
+	public ImageIcon loadIcon(String iconName) throws IOException {
+		  ClassLoader loader = this.getClass().getClassLoader();
+		  BufferedImage icon = 
+		  ImageIO.read(loader.getResourceAsStream(iconName));
+		  return new ImageIcon(icon);
+		}
 }
