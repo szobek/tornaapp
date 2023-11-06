@@ -11,7 +11,7 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
 import javax.swing.JButton;
-import java.awt.Font;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -90,7 +90,7 @@ public class Login {
 			JLabel pic = new JLabel(new ImageIcon(Login.class.getResource("/images/l.png")));
 			
 			
-			pic.setSize(263, 91);
+			pic.setSize(277, 91);
 			pic.setLocation(59, 11);
 			frmLogin.getContentPane().add(pic);
 			
@@ -122,10 +122,17 @@ public class Login {
 				}
 				ExerciseUser user= DBHAndler2.checkLogin(email, psw);
 				if(user!=null) {
+					
+					Welcome welcomeFrame = new Welcome(user);
+					welcomeFrame.frame.setVisible(true);
+					welcomeFrame.frame.setBounds(0, 0, 680, 400);
+					frmLogin.dispose();
+					/*
 					Welcome welcomeWindow = new Welcome(user);
 					frmLogin.setVisible(false);
 					welcomeWindow.setVisible(true);
 					welcomeWindow.setBounds(0, 0, 680, 400);
+					*/
 					
 				}else {
 					JOptionPane.showMessageDialog(null, "a jelszó vagy az email hibás", "Login hiba", JOptionPane.ERROR_MESSAGE, null);

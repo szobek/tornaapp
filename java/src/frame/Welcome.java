@@ -1,7 +1,12 @@
 package frame;
 
-import java.util.ArrayList;
+import java.awt.EventQueue;
+
 import javax.swing.JFrame;
+import javax.swing.JToggleButton;
+
+import java.util.ArrayList;
+
 import javax.swing.JScrollPane;
 
 import javax.swing.JMenuBar;
@@ -31,13 +36,8 @@ import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.JTextPane;
 
-
-public class Welcome extends JFrame {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+public class Welcome {
+	
 	private ArrayList<ExerciseUser> users;
 	private JTable table;
 	private Object[][] tableData;
@@ -61,17 +61,39 @@ public class Welcome extends JFrame {
 	private boolean createNewUser;
 	private JPanel panelWelcome;
 
+	public JFrame frame;
+
+	
+
+
+	/**
+	 * Create the application.
+	 */
 	public Welcome(ExerciseUser user) {
-
+		frame=new JFrame();
 		this.user = user;
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
+		initialize();
+		
+	}
 
-		setTitle("Villámtánc");
-		getContentPane().setLayout(null);
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Welcome.class.getResource("/images/vt_logo.png")));
+
+		frame.setTitle("Villámtánc");
+		frame.getContentPane().setLayout(null);
 
 		panelWelcome = new JPanel();
 		panelWelcome.setBounds(10, 0, 399, 236);
-		getContentPane().add(panelWelcome);
+		frame.getContentPane().add(panelWelcome);
 		panelWelcome.setLayout(null);
 
 		JTextPane textPaneWelcomeText = new JTextPane();
@@ -90,17 +112,17 @@ public class Welcome extends JFrame {
 		doc.setCharacterAttributes(105, doc.getLength() - 105, textStyle, false);
 		doc.setParagraphAttributes(0, 104, textStyle, false);
 
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 		getAllData();
 
 		createMenu();
-
 	}
+	
 
 	private void createMenu() {
 
 		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+		frame.setJMenuBar(menuBar);
 
 		JMenu mnNewMenu = new JMenu("Foglalás");
 		menuBar.add(mnNewMenu);
@@ -168,7 +190,7 @@ public class Welcome extends JFrame {
 		panelReserves = new JPanel();
 		panelReserves.setBounds(10, 20, 650, 300);
 		panelReserves.setBackground(Color.cyan);
-		getContentPane().add(panelReserves);
+		frame.getContentPane().add(panelReserves);
 		panelReserves.setLayout(null);
 
 		panelReserves.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -201,7 +223,7 @@ public class Welcome extends JFrame {
 		panelUserList = new JPanel();
 		panelUserList.setBounds(10, 20, 650, 300);
 		panelUserList.setBackground(Color.cyan);
-		getContentPane().add(panelUserList);
+		frame.getContentPane().add(panelUserList);
 		panelUserList.setLayout(null);
 
 		panelUserList.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -250,18 +272,18 @@ public class Welcome extends JFrame {
 
 	private void hideAllComponent() {
 		if (panelUserList != null)
-			getContentPane().remove(panelUserList);
+			frame.getContentPane().remove(panelUserList);
 		if (panel != null)
-			getContentPane().remove(panel);
+			frame.getContentPane().remove(panel);
 		if (panelReserves != null)
-			getContentPane().remove(panelReserves);
+			frame.getContentPane().remove(panelReserves);
 		if (panelUserRights != null)
-			getContentPane().remove(panelUserRights);
+			frame.getContentPane().remove(panelUserRights);
 		if (panelWelcome != null)
-			getContentPane().remove(panelWelcome);
+			frame.getContentPane().remove(panelWelcome);
 
-		revalidate();
-		repaint();
+		frame.revalidate();
+		frame.repaint();
 
 	}
 
@@ -283,7 +305,7 @@ public class Welcome extends JFrame {
 		panel = new JPanel();
 		panel.setBounds(33, 11, 320, 300);
 		panel.setBackground(new Color(200, 200, 200));
-		getContentPane().add(panel);
+		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 
@@ -468,7 +490,7 @@ public class Welcome extends JFrame {
 		panelUserRights = new JPanel();
 		panelUserRights.setBounds(33, 11, 320, 300);
 		panelUserRights.setBackground(Color.lightGray);
-		getContentPane().add(panelUserRights);
+		frame.getContentPane().add(panelUserRights);
 
 		JCheckBox rightReservesList = new JCheckBox("Foglalás lista");
 		rightReservesList.setSelected(userRights.isReserveList());
@@ -488,7 +510,7 @@ public class Welcome extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				
 				user.setUserRight(new UserRight(user.getUserId(), rightReservesList.isSelected(),
 						rightCreateNewUser.isSelected()));
 
@@ -519,4 +541,5 @@ public class Welcome extends JFrame {
 	private void showHelp() {
 		JOptionPane.showMessageDialog(null, "kell content", "Súgó", JOptionPane.INFORMATION_MESSAGE);
 	}
+
 }
