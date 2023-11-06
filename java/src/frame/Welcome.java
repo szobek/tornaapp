@@ -30,7 +30,7 @@ import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.JTextPane;
-import javax.swing.DropMode;
+
 
 public class Welcome extends JFrame {
 	/**

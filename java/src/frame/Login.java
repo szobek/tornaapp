@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.Color;
-import java.awt.Toolkit;
+
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
 import javax.swing.JButton;
@@ -54,7 +54,7 @@ public class Login {
 		frmLogin.setTitle("Login");
 		
 		frmLogin.getContentPane().setBackground(new Color(102, 205, 170));
-		frmLogin.setIconImage(Toolkit.getDefaultToolkit().getImage("D:\\login-935679.png"));
+		
 		frmLogin.setBackground(new Color(102, 205, 170));
 		frmLogin.setAlwaysOnTop(true);
 		frmLogin.setBounds(100, 100, 405, 244);
@@ -87,15 +87,15 @@ public class Login {
 		try {
 			
 			
-			JLabel pic = new JLabel(new ImageIcon("D:\\projects\\all\\tornaapp\\java\\src\\images\\l.png"));
-			pic.setFont(new Font("Trebuchet MS", Font.PLAIN, 11));
-			pic.setForeground(new Color(153, 255, 102));
+			JLabel pic = new JLabel(new ImageIcon(Login.class.getResource("/images/l.png")));
+			
+			
 			pic.setSize(263, 91);
 			pic.setLocation(59, 11);
 			frmLogin.getContentPane().add(pic);
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
