@@ -1,15 +1,6 @@
 package frame;
 
-import java.sql.Connection;
-
-import java.sql.DriverManager;
-
-import java.sql.PreparedStatement;
-
-import java.sql.ResultSet;
-
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class DBHAndler2 {
@@ -27,7 +18,12 @@ public class DBHAndler2 {
 
 	public static ArrayList<ExerciseUser> getAllFromDB() {
 
-		Connection con = connectToDb();
+		Connection con = null;
+		try {
+			con = connectToDb();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		ArrayList<ExerciseUser> users = new ArrayList<ExerciseUser>();
 		if (con != null) {
 			try {
@@ -94,13 +90,22 @@ public class DBHAndler2 {
 
 	public static ExerciseUser checkLogin(String email, String password) {
 		ExerciseUser user = null;
-		Connection con = connectToDb();
+		Connection con = null;
+		try {
+			con = connectToDb();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}
+		
+		String query ;
 		if (con != null) {
 			try {
-				String query = "select users.id,users.email,phone,first_name,last_name,user_rights.newuser,user_rights.listreserves from users inner join user_data on users.id=user_data.user_id inner join user_rights on user_rights.user_id=users.id where email=? and password=?";
+				query = "select users.id,users.email,phone,first_name,last_name,user_rights.newuser,user_rights.listreserves from users inner join user_data on users.id=user_data.user_id inner join user_rights on user_rights.user_id=users.id where email=? and password=?";
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, email);
 				stmt.setString(2, password);
+				
 				ResultSet rs = stmt.executeQuery();
 				if (rs.next()) {
 					
@@ -120,7 +125,13 @@ public class DBHAndler2 {
 	
 	
 	public static boolean saveNewUserInDb(ExerciseUser newUser) {
-		Connection con = connectToDb();
+		Connection con = null;
+		try {
+			con = connectToDb();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		ResultSet rs;
 		long id = 0;
 		boolean success=false;
@@ -158,7 +169,13 @@ public class DBHAndler2 {
 	}
 	
 	public static boolean UpdateUserData(ExerciseUser user) {
-		Connection con = connectToDb();
+		Connection con = null;
+		try {
+			con = connectToDb();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		boolean success=false;
 		if (con != null) {
 			try {
@@ -187,7 +204,13 @@ public class DBHAndler2 {
 	
 	public static boolean deleteUser(ExerciseUser user) {
 
-		Connection con = connectToDb();
+		Connection con = null;
+		try {
+			con = connectToDb();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		boolean success=false;
 		if (con != null) {
 			try {
@@ -222,7 +245,13 @@ public class DBHAndler2 {
 		return success;	}
 	public static String getNameById(int id) {
 		String name="";
-		Connection con = connectToDb();
+		Connection con = null;
+		try {
+			con = connectToDb();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		if (con != null) {
 			try {
 				String query = "select * from user_data where user_id=?";
@@ -244,7 +273,13 @@ public class DBHAndler2 {
 	
 	public static UserRight getUserRightsFromDB(int id) {
 		UserRight rights=new UserRight();
-		Connection con = connectToDb();
+		Connection con = null;
+		try {
+			con = connectToDb();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		if (con != null) {
 			try {
 				String query = "select * from user_rights where user_id=?";
@@ -269,7 +304,13 @@ public class DBHAndler2 {
 	}
 	
 	public static boolean saveUserRightsInDB(ExerciseUser user) {
-		Connection con = connectToDb();
+		Connection con = null;
+		try {
+			con = connectToDb();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}
 		boolean success=false;
 		if (con != null) {
 			try {

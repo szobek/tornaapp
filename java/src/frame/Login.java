@@ -1,19 +1,9 @@
 package frame;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import java.awt.Color;
-
-import javax.swing.ImageIcon;
-import javax.swing.JSeparator;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Login {
 
@@ -75,8 +65,7 @@ public class Login {
 		frmLogin.getContentPane().add(textFieldEmail);
 		textFieldEmail.setColumns(10);
 
-		passwordFieldPassword = new JPasswordField("rrrrrr"
-				+ "");
+		passwordFieldPassword = new JPasswordField("rrrrrr");
 		passwordFieldPassword.setBounds(150, 174, 107, 20);
 		frmLogin.getContentPane().add(passwordFieldPassword);
 
@@ -88,7 +77,7 @@ public class Login {
 		try {
 			
 			
-			JLabel pic = new JLabel(new ImageIcon("./src/images/l.png"));
+			JLabel pic = new JLabel(new ImageIcon(ClassLoader.getSystemResource("./main/resources/login.png")));
 			
 			
 			pic.setSize(277, 91);
@@ -111,30 +100,27 @@ public class Login {
 				
 				String email = textFieldEmail.getText() ;
 				
-				if(email.equals("")) {
+				if(email.isEmpty()) {
 					
 					JOptionPane.showMessageDialog(null, "az e-mail nem lehet üres", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
 					return;
 				}
-				if( String.valueOf(passwordFieldPassword.getPassword()).equals("")) {
+				String pswInput=String.valueOf(passwordFieldPassword.getPassword());
+				if( pswInput.isEmpty()) {
 					
 					JOptionPane.showMessageDialog(null, "a jelszó nem lehet üres", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
 					return;
 				}
+				System.out.println(psw);
 				ExerciseUser user= DBHAndler2.checkLogin(email, psw);
+				System.out.println(user);
 				if(user!=null) {
 					
 					Welcome welcomeFrame = new Welcome(user);
 					welcomeFrame.frame.setVisible(true);
 					welcomeFrame.frame.setBounds(0, 0, 680, 400);
 					frmLogin.dispose();
-					/*
-					Welcome welcomeWindow = new Welcome(user);
-					frmLogin.setVisible(false);
-					welcomeWindow.setVisible(true);
-					welcomeWindow.setBounds(0, 0, 680, 400);
-					*/
-					
+
 				}else {
 					JOptionPane.showMessageDialog(null, "a jelszó vagy az email hibás", "Login hiba", JOptionPane.ERROR_MESSAGE, null);
 					return;
